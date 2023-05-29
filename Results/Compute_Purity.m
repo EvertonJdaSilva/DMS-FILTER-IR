@@ -1,10 +1,10 @@
 clear;
 close all;
 
-problems_2
+%problems_2
 %smooth_problems
 %problems_M % without the problems ZLT1_C3, ZLT1_C4, and ZLT1_C5.
-%problems_ALL
+problems_ALL
 
 
 solversleg_vs = char('DMS-Filter-IR','DFMO','DmultiMads-PB','DMS-EB');
