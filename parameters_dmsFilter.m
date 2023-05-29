@@ -52,7 +52,7 @@ tol_stop  = 10^-3; % Lowest value allowed for the step size parameter.
 stop_feval = 1;     % 0-1 variable: 1 if the stopping criterion is based
                     % on a maximum number of function evaluations; 0
                     % otherwise.
-max_fevals = 500; % Maximum number of function evaluations allowed.
+max_fevals = 20000; % Maximum number of function evaluations allowed.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Algorithmic Options.

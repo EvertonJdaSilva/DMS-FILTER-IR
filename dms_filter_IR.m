@@ -602,7 +602,8 @@ while (~halt)
                    pdom = 1;
                else
                    %[pdom,index_ndom] = paretodominance(Ftemp,Flist);
-                   [pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
+                   %[pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
+                   [pdom,index_ndom] = paretodominance_MAY(Ftemp,Flist,tol_feasible);
                    if (pdom == 0)
                        if f_current_poll(end)>tol_feasible && Ftemp(end)<f_current_poll(end) && index_ndom(1) ~= 0
                            improving = 1;
