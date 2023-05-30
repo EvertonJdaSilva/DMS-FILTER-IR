@@ -44,7 +44,7 @@ function [pdom,index_ndom] = paretodominance_MAY(F,Flist,tol_feasible)
 %
 %
  
-if F(end,1)>tol_feasible
+if F(end,1)>tol_feasible && F(end,1)>=Flist(end,1)
     [~,mlist] = size(Flist(1:end-1,1));
     index = logical(sum(F(1:end-1)<Flist(1:end-1,1)));
     % poll_center_dom (0-1 variable: 1 if the poll center is dominated; 0
