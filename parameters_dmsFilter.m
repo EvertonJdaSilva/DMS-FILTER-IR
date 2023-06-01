@@ -139,6 +139,9 @@ sort_filter_par = 1;  % oder the list of ponts in some way to choose the poll ce
 %
 oport_approach = 0;   % the approach used to says that an approach oportunistic or complete polling
 %
+sd = 1e-6;
+%
+suficient_decrease = 1;
 %rho = 0.1;
 %% Inexact Restoration parameters
 %restoration_approach = 6;

@@ -2,7 +2,7 @@ T=[];
 
 doublefig=1;
 
-legenda=char('teste_MAY_AE_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
+legenda=char('teste_MAY_AE_SD_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
 
 Titulo = ' \Gamma performance profile ';
 file= 'Xi_avg_all';

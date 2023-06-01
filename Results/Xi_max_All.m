@@ -2,7 +2,7 @@ T=[];
 
 doublefig=1;
 
-legenda=char('teste_MAY_AE_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
+legenda=char('teste_MAY_AE_SD_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
 
 Titulo = 'Maximum \Gamma performance profile for 10 runs';
 file= 'Xi_max_all';
