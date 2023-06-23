@@ -1534,14 +1534,14 @@ format compact;
 %%_______________________________________________________________________
 
 nprobs=214;
-fp = fopen('Results\teste_June_xi_20000.m','wt');     % instrucao Windows
+fp = fopen('Results\teste_MAY_AE_500.m','wt');     % instrucao Windows
 % fp =fopen('Results/dms_filter_IR_20000funceval_newdominance.m','wt');      % instrucao Linux
 
 func_evals=zeros(nprobs,1);
 for i=1:nprobs
    fprintf('==================  Problema %3d ================== \n' ,i)
-   fprintf(fp,'teste_June_xi_20000_%s_%s=[',problem(i).name,problem(i).Constraint);
-   file_cache = ['teste_June_xi_20000_' problem(i).name '_' problem(i).Constraint '_cache.m'];   
+   fprintf(fp,'teste_MAY_AE_500_%s_%s=[',problem(i).name,problem(i).Constraint);
+   file_cache = ['teste_MAY_AE_500_' problem(i).name '_' problem(i).Constraint '_cache.m'];   
    lb     = problem(i).lbound;
    ub     = problem(i).ubound;   
    xi     = problem(i).x_ini;
@@ -1550,9 +1550,8 @@ for i=1:nprobs
    grad_C = problem(i).grad_Constraint ;
 
        
-   %[Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C,grad_C,6); Melhor versão
-   [Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C,grad_C,8);
-
+   [Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C,grad_C,6); 
+   
    
    func_evals(i)=func_eval;
    [n,m]=size(f);

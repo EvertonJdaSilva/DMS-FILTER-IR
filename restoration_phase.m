@@ -270,8 +270,45 @@ switch restoration_approach
     case 8
         %% Usinf xi(alfa_k) = 2/pi*atan(alfa_k)
         Opt = optimset('Display','off','GradConstr','on','GradObj','on');
-        % min 1/2||y-xk||.^2+sum(g(x)) s.t. g_i(y)<= 2/pi*atan(alfa_k)*g_i(xk) and y in X
+        % min 1/2||y-xk||.^2 s.t. g_i(y)<= 2/pi*atan(alfa_k)*g_i(xk) and y in X
         alfak_gxk = 2/pi*atan(alfak)*feval(func_C,xk);
+        [y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
+        if exitflag ==1
+            if cache ~= 0
+                ynorm        = norm(y,1);
+                [match,y] = match_point(y,ynorm,CacheP,CacheF,CachenormP,tol_match);
+            end
+            if ~match
+                c     = norm(max(0,feval(func_C,y)),2).^2;
+                Fy    = [feval(func_F,y);c];
+                func_eval = func_eval+1;
+                %%% Verifies if the new point is nondominated
+                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if (pdom == 0)
+                    code_add = 1;
+                    if (Pareto_front == 1)
+                        Restoration_success = 1;
+                    end
+                    if index_ndom(1) == 0
+                        if (Pareto_front == 0)
+                            Restoration_success  = 1;
+                            code_add = 2;
+                        end
+                        index_poll_center = 0;
+                        index_ndom(1)     = 1;
+                    end
+                    Plist = [Plist(:,index_ndom),y];
+                    Flist = [Flist(:,index_ndom),Fy];
+                    alfa  = [alfa(index_ndom),alfa(1)];
+                    Llist = [Llist(index_ndom),Llist(1)];
+                    added = [added(index_ndom),code_add];
+                end
+            end
+        end
+    case 9
+        Opt = optimset('Display','off','GradConstr','on','GradObj','on');
+        % min 1/2||y-xk||.^2 s.t. g_i(y)<= max{h(xk)-xi(alfak),0} and y in X
+        alfak_gxk = max(feval(func_C,xk)-((alfak/2)^2),0);
         [y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
         if exitflag ==1
             if cache ~= 0
