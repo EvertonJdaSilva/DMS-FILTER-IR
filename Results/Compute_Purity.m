@@ -7,12 +7,12 @@ problems_2
 %problems_ALL
 
 
-solversleg_vs = char('DMS-Filter-IR - v1','DMS-Filter-IR - v2');%,'DFMO','DmultiMads-PB','DMS-EB');
+solversleg_vs = char('DMS-FILTER-IR','DMS-EB');%'DFMO','DmultiMads-PB'
 solversleg = solversleg_vs;
 
 guarda_purity = [];
 
-solvers_vs_best = char('teste_MAY_AE_500','teste_June_xi_500');%,'DFMO_centroid_500funcevals','DMultiMadsPB_500funceval','dms_EB_500funcevals');
+solvers_vs_best = char('teste_MAY_AE_500','dms_EB_500funcevals');%'DFMO_centroid_500funcevals','DMultiMadsPB_500funceval'
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic= char();
@@ -76,7 +76,7 @@ Titulo = 'Purity performance profile';
 
 file= 'all';
 GenProfile
-axis([0.8 15 0 1])
+axis([1 15 0 1])
 
 print -depsc Purity.eps
 print  -dpdf Purity.pdf %'-bestfit' or '-fillpage'
