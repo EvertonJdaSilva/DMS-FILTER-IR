@@ -6,12 +6,12 @@ problems_2
 %problems_ALL
 
 
-solversleg_vs = char('DMS-FILTER-IR','DMS-EB');%'DFMO','DmultiMads-PB'
+solversleg_vs = char('DMS-FILTER-IR - Coordinate','DMS-FILTER-IR - Dense');%,'DFMO','DmultiMads-PB','DMS-EB'
 solversleg = solversleg_vs;
 guarda_a = [];
 guarda_v = [];
 
-solvers_vs_best = char('teste_MAY_AE_500','dms_EB_500funcevals');%'DFMO_centroid_500funcevals','DMultiMadsPB_500funceval'
+solvers_vs_best = char('teste_MAY_AE_5000','teste_dense_5000');%,'DFMO_centroid_5000funcevals','DMultiMadsPB_5000funceval','dms_EB_5000funcevals'
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic = char();
