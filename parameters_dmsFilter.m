@@ -108,7 +108,7 @@ spread_option = 1; % 0-2 variable: 1 if for each point in the current approximat
 %
 % Directions and step size.
 %
-dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be 
+dir_dense  = 5;    % 0-5 variable: 1 if a dense set of directions should be 
                    % considered for polling, 2 a dense set of direction as 
                    % it done in MADS; 3 or 4 if directions conforming the 
                    % boundary relative to the epsilon-active constraints,
