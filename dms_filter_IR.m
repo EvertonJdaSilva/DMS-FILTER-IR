@@ -605,9 +605,11 @@ while (~halt)
                    %[pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
                    %[pdom,index_ndom] = paretodominance_MAY(Ftemp,Flist,tol_feasible);
                    if suficient_decrease
-                       [pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);
+                       %[pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);
+                       [pdom,index_ndom] = paretodominance_November(Ftemp,Flist,tol_feasible); 
                    else
-                       [pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist-sd*alfa(1)^2*norm(D(:,count_d),2)^2,tol_feasible);
+                       %[pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist-sd*alfa(1)^2*norm(D(:,count_d),2)^2,tol_feasible);
+                       [pdom,index_ndom] = paretodominance_November(Ftemp,Flist-sd*alfa(1)^2*norm(D(:,count_d),2)^2,tol_feasible);
                    end
                    if (pdom == 0)
                        if f_current_poll(end)>tol_feasible && Ftemp(end)<f_current_poll(end) && index_ndom(1) ~= 0
