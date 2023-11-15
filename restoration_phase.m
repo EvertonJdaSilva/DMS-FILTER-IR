@@ -1,4 +1,4 @@
-function [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter)
+function [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter,paretodominance_original,tol_feasible)
 xk                  = Plist(:,1);
 alfak               = alfa(1);
 Restoration_success = 0;
@@ -23,7 +23,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -60,7 +64,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -97,7 +105,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -134,7 +146,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -171,7 +187,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -208,7 +228,12 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    %[pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                    [pdom,index_ndom] = paretodominance_November2(Fy,Flist,tol_feasible);
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -221,7 +246,7 @@ switch restoration_approach
                         end
                         index_poll_center = 0;
                         index_ndom(1)     = 1;
-                    end
+                    end                    
                     Plist = [Plist(:,index_ndom),y];
                     Flist = [Flist(:,index_ndom),Fy];
                     alfa  = [alfa(index_ndom),alfa(1)];
@@ -245,7 +270,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -283,7 +312,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)
@@ -320,7 +353,11 @@ switch restoration_approach
                 Fy    = [feval(func_F,y);c];
                 func_eval = func_eval+1;
                 %%% Verifies if the new point is nondominated
-                [pdom,index_ndom] = paretodominance(Fy,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist); 
+                end
                 if (pdom == 0)
                     code_add = 1;
                     if (Pareto_front == 1)

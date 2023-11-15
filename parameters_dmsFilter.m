@@ -108,7 +108,7 @@ spread_option = 1; % 0-2 variable: 1 if for each point in the current approximat
 %
 % Directions and step size.
 %
-dir_dense  = 5;    % 0-5 variable: 1 if a dense set of directions should be 
+dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be 
                    % considered for polling, 2 a dense set of direction as 
                    % it done in MADS; 3 or 4 if directions conforming the 
                    % boundary relative to the epsilon-active constraints,
@@ -139,10 +139,8 @@ sort_filter_par = 1;  % oder the list of ponts in some way to choose the poll ce
 %
 oport_approach = 0;   % the approach used to says that an approach oportunistic or complete polling
 %
-sd = 1e-6;
-%
-suficient_decrease = 0;
 %rho = 0.1;
+paretodominance_original = 0;
 %% Inexact Restoration parameters
 %restoration_approach = 6;
 

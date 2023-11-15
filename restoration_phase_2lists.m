@@ -1,4 +1,4 @@
-function [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,added_F,added_I,index_poll_center_F,index_poll_center_I,func_eval,Restoration_success] = restoration_phase_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,func_F,func_C,grad_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,tol_feasible,Llist_ini,alfa_ini)
+function [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,added_F,added_I,index_poll_center_F,index_poll_center_I,func_eval,Restoration_success] = restoration_phase_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,func_F,func_C,grad_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,tol_feasible,Llist_ini,alfa_ini,paretodominance_original)
 xk                  = Plist_I(:,1);
 alfak               = alfa_I(1);
 Restoration_success = 0;
@@ -12,7 +12,7 @@ added_F             = zeros(1,size(Plist_F,2));
 Opt = optimset('Display','off','GradConstr','on','GradObj','on');
 % min 1/2||y-xk||.^2+sum(g(x)) s.t. g_i(y)<= (alfak/2)^2*g_i(xk) and y in X
 alfak_gxk = ((alfak/2)^2)*feval(func_C,xk);
-[y,~,exitflag] = fmincon(@(y)func_IR(y,xk,func_C,grad_C),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
+[y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
 if exitflag ==1
     if cache ~= 0
         ynorm        = norm(y,1);
@@ -22,7 +22,6 @@ if exitflag ==1
         c     = norm(max(0,feval(func_C,y)),2).^2;
         Fy    = [feval(func_F,y);c];
         func_eval = func_eval+1;
-        %%% Verifies if the new point is nondominated
         %%% Verifies if the new point is nondominated
         if Fy(end)<=tol_feasible
             if isempty(Flist_F)
@@ -61,7 +60,11 @@ if exitflag ==1
                 alfa_I  = alfa_ini;
                 added_I = zeros(1,size(Plist_I,2));
             else
-                [pdom,index_ndom] = paretodominance(Fy,Flist_I);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Fy,Flist_I);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Fy,Flist_I);
+                end
                 if (pdom == 0)
                     if index_ndom(1) == 0
                         Restoration_success = 1;

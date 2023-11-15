@@ -440,7 +440,11 @@ if ~isempty(Flist_I)
         Ptemp_I     = Plist_I(:,j);
         Ltemp_I     = Llist_I(j);
         alfatemp_I  = alfa_I(j);
-        [pdom,index_ndom] = paretodominance(Ftemp_I,Flist_temp_I);
+        if paretodominance_original
+            [pdom,index_ndom] = paretodominance(Ftemp_I,Flist_temp_I);
+        else
+            [pdom,index_ndom] = paretodominance_November(Ftemp_I,Flist_temp_I);            
+        end
         if (pdom == 0)
             Plist_temp_I = [Plist_temp_I(:,index_ndom),Ptemp_I];
             Flist_temp_I = [Flist_temp_I(:,index_ndom),Ftemp_I];
@@ -546,7 +550,7 @@ while (~halt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  
         if ~poll_center_feas
-            [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,added_F,added_I,index_poll_center_F,index_poll_center_I,func_eval,Restoration_success] = restoration_phase_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,func_F,func_C,grad_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,tol_feasible,Llist_ini,alfa_ini); %#ok<*ASGLU> 
+            [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,added_F,added_I,index_poll_center_F,index_poll_center_I,func_eval,Restoration_success] = restoration_phase_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,func_F,func_C,grad_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,tol_feasible,Llist_ini,alfa_ini,paretodominance_original); %#ok<*ASGLU> 
             if Restoration_success
                 success = 1;
                 poll = 0;
@@ -753,7 +757,11 @@ while (~halt)
                             alfa_I  = alfa_ini;
                             added_I = zeros(1,size(Plist_I,2));
                         else
-                            [pdom,index_ndom] = paretodominance(Ftemp,Flist_I);
+                            if paretodominance_original
+                                [pdom,index_ndom] = paretodominance(Ftemp,Flist_I);
+                            else
+                                [pdom,index_ndom] = paretodominance_November(Ftemp,Flist_I);            
+                            end
                             if (pdom == 0)
                                 if ~poll_center_feas
                                     if index_ndom(1) ~= 0 && Ftemp(end)<f_current_poll(end)
@@ -784,7 +792,7 @@ while (~halt)
                     end
                 end
             end
-            if oportunistic_approach && dominating
+            if oport_approach && dominating
                 count_d = nd + 1;
             else
                 count_d = count_d + 1;

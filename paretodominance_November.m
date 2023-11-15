@@ -41,8 +41,8 @@ function [pdom_L,index_ndom] = paretodominance_November(F,Flist)
 % Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 %
 %
-% Separate the list into points that satisfy h(x)>h(y) and h(x)>0 (L1)
-% and points that satisfy h(x)<=h(y) or h(x)=0 (L2)
+% Separate the list into points that satisfy h(x)>=h(y) (L1)
+% and points that satisfy h(x)<h(y) (L2)
 indices = logical(Flist(end,:)>=F(end,1));
 L1 = Flist(:,indices);
 L2 = Flist(:,~indices);
@@ -100,6 +100,7 @@ if ~pdom_L
     index_ndom(indicesaux1) = index_ndomL1;
     index_ndom(indicesaux2) = index_ndomL2;
 end
+index_ndom = logical(index_ndom);
 end
 %
 % End of paretodominance.

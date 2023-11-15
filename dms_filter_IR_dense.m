@@ -424,7 +424,11 @@ for i=1:size(Pini,2)
             if match
                 pdom = 1;
             else
-                [pdom,index_ndom] = paretodominance(Ftemp,Flist);
+                if paretodominance_original
+                    [pdom,index_ndom] = paretodominance(Ftemp,Flist);
+                else
+                    [pdom,index_ndom] = paretodominance_November(Ftemp,Flist);
+                end
                 if (pdom == 0)
                     Plist = [Plist(:,index_ndom),x_ini];
                     Flist = [Flist(:,index_ndom),Ftemp];
@@ -511,7 +515,7 @@ while (~halt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  
         if f_current_poll(end) > tol_feasible
-            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter);
+            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter,paretodominance_original);
             if Restoration_success
                 success = 1;
                 poll = 0;
@@ -663,13 +667,11 @@ while (~halt)
                if match
                    pdom = 1;
                else
-                   %[pdom,index_ndom] = paretodominance(Ftemp,Flist);
-                   %[pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
-                   %[pdom,index_ndom] = paretodominance_MAY(Ftemp,Flist,tol_feasible);
-                   if ~suficient_decrease
-                       [pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);
+                   if paretodominance_original
+                       [pdom,index_ndom] = paretodominance(Ftemp,Flist);
+                       %[pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);                       
                    else
-                       [pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist-sd*alfa(1)^2*norm(D(:,count_d),2)^2,tol_feasible);
+                       [pdom,index_ndom] = paretodominance_November(Ftemp,Flist);
                    end
                    if (pdom == 0)
                        if f_current_poll(end)>tol_feasible && Ftemp(end)<f_current_poll(end) && index_ndom(1) ~= 0
