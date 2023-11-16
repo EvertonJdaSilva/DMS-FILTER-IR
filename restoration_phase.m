@@ -232,7 +232,8 @@ switch restoration_approach
                     [pdom,index_ndom] = paretodominance(Fy,Flist);
                 else
                     %[pdom,index_ndom] = paretodominance_November(Fy,Flist); 
-                    [pdom,index_ndom] = paretodominance_November2(Fy,Flist,tol_feasible);
+                    %[pdom,index_ndom] = paretodominance_November2(Fy,Flist,tol_feasible);
+                    [pdom,index_ndom] = paretodominance_November3(Fy,Flist,tol_feasible);
                 end
                 if (pdom == 0)
                     code_add = 1;

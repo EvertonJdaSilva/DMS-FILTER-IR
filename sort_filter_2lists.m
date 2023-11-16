@@ -54,31 +54,31 @@ elseif (count_poll_1 == count_poll && ~isempty(Flist_F_1) && ~isempty(Flist_I_1)
 % poll center that generate only infeasible points.
 % Remark: The last point in the feasible list corresponds to the
 % previous feasible poll center
-%     y = Plist_F_1(:,end)-Plist_I_1(:,1:end);
-%     indaux    = 1;
-%     distancia = zeros(size(y,2),1);
-%     while indaux<= size(y,2)
-%         distancia(indaux)=norm(y(:,indaux));
-%         indaux=indaux+1;
-%     end
-%     %%% Verifies which points are insid of the boll of ratio par_ratio*alfa_F(end)
-%     indaux1 = find(distancia<=par_ratio*alfa_F_1(end));
-%     % Points out of the boll
-%     indaux2 = setdiff(1:size(Plist_I_1,2),indaux1);
-%     % Find the least value of constraint violation value inside the boll
-%     [~,ind_Flist_aux2_leasth] = min(Flist_I_1(end,indaux1));  
-%     t = indaux1(ind_Flist_aux2_leasth);
-%     r = setdiff(indaux1,t);
-%     %%% ordered
-%     Plist_I = [Plist_I_1(:,t),Plist_I_1(:,r),Plist_I_1(:,indaux2),Plist_I_2];
-%     Flist_I = [Flist_I_1(:,t),Flist_I_1(:,r),Flist_I_1(:,indaux2),Flist_I_2];
-%     alfa_I  = [alfa_I_1(t),alfa_I_1(r),alfa_I_1(indaux2),alfa_I_2];
-%     Llist_I = [Llist_I_1(t),Llist_I_1(r),Llist_I_1(indaux2),Llist_I_2];
-    [Plist_I_1,Flist_I_1,Llist_I_1,alfa_I_1] = arg_max_psi(Flist_F_1,Plist_I_1,Flist_I_1,Llist_I_1,alfa_I_1);
-    Plist_I = [Plist_I_1,Plist_I_2];
-    Flist_I = [Flist_I_1,Flist_I_2];
-    alfa_I  = [alfa_I_1,alfa_I_2];
-    Llist_I = [Llist_I_1,Llist_I_2];
+    y = Plist_F_1(:,end)-Plist_I_1(:,1:end);
+    indaux    = 1;
+    distancia = zeros(size(y,2),1);
+    while indaux<= size(y,2)
+        distancia(indaux)=norm(y(:,indaux));
+        indaux=indaux+1;
+    end
+    %%% Verifies which points are insid of the boll of ratio par_ratio*alfa_F(end)
+    indaux1 = find(distancia<=par_ratio*alfa_F_1(end));
+    % Points out of the boll
+    indaux2 = setdiff(1:size(Plist_I_1,2),indaux1);
+    % Find the least value of constraint violation value inside the boll
+    [~,ind_Flist_aux2_leasth] = min(Flist_I_1(end,indaux1));  
+    t = indaux1(ind_Flist_aux2_leasth);
+    r = setdiff(indaux1,t);
+    %%% ordered
+    Plist_I = [Plist_I_1(:,t),Plist_I_1(:,r),Plist_I_1(:,indaux2),Plist_I_2];
+    Flist_I = [Flist_I_1(:,t),Flist_I_1(:,r),Flist_I_1(:,indaux2),Flist_I_2];
+    alfa_I  = [alfa_I_1(t),alfa_I_1(r),alfa_I_1(indaux2),alfa_I_2];
+    Llist_I = [Llist_I_1(t),Llist_I_1(r),Llist_I_1(indaux2),Llist_I_2];
+%     [Plist_I_1,Flist_I_1,Llist_I_1,alfa_I_1] = arg_max_psi(Flist_F_1,Plist_I_1,Flist_I_1,Llist_I_1,alfa_I_1);
+%     Plist_I = [Plist_I_1,Plist_I_2];
+%     Flist_I = [Flist_I_1,Flist_I_2];
+%     alfa_I  = [alfa_I_1,alfa_I_2];
+%     Llist_I = [Llist_I_1,Llist_I_2];
 else
     poll_center_feas = 1;
     [Plist_F_1,Flist_F_1,Llist_F_1,alfa_F_1] = most_isolated(Plist_F_1,Flist_F_1,Llist_F_1,alfa_F_1,stop_alfa,tol_stop);

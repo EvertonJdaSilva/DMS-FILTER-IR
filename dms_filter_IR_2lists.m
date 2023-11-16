@@ -530,12 +530,12 @@ while (~halt)
 %        Choose the poll center
 %
          if (sort_filter_par ~= 0)
-%              if  iter == 0 || Restoration_success
-%                  [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = sort_filter_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,par_ratio);
-%              else
-%                  [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = sort_filter_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,par_ratio,count_poll_1,count_poll);
-%              end
-             [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = SelectPollCenter(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,rho);
+             if  iter == 0 || Restoration_success
+                 [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = sort_filter_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,par_ratio);
+             else
+                 [Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = sort_filter_2lists(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,par_ratio,count_poll_1,count_poll);
+             end
+             %[Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,poll_center_feas] = SelectPollCenter(Plist_F,Flist_F,Llist_F,alfa_F,Plist_I,Flist_I,Llist_I,alfa_I,stop_alfa,tol_stop,rho);
              if poll_center_feas
                  f_current_poll = Flist_F(:,1);
                  p_current_poll = Plist_F(:,1);
