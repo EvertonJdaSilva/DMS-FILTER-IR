@@ -1534,14 +1534,14 @@ format compact;
 %%_______________________________________________________________________
 
 nprobs=214;
-fp = fopen('Results\teste_november10_4_v4_5000.m','wt');     % instrucao Windows
+fp = fopen('Results\teste_november_v4_20000_10_4.m','wt');     % instrucao Windows
 % fp =fopen('Results/dms_filter_IR_500funceval_newdominance.m','wt');      % instrucao Linux
 
 func_evals=zeros(nprobs,1);
 for i=1:nprobs
    fprintf('==================  Problema %3d ================== \n' ,i)
-   fprintf(fp,'teste_november10_4_v4_5000_%s_%s=[',problem(i).name,problem(i).Constraint);
-   file_cache = ['teste_november10_4_v4_5000_' problem(i).name '_' problem(i).Constraint '_cache.m'];   
+   fprintf(fp,'teste_november_v4_20000_10_4_%s_%s=[',problem(i).name,problem(i).Constraint);
+   file_cache = ['teste_november_v4_20000_10_4_' problem(i).name '_' problem(i).Constraint '_cache.m'];   
    lb     = problem(i).lbound;
    ub     = problem(i).ubound;   
    xi     = problem(i).x_ini;
