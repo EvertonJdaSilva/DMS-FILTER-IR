@@ -14,7 +14,7 @@ solversleg = solversleg_vs;
 guarda_a = [];
 guarda_v = [];
 
-solvers_vs_best = char('teste_november_v4_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
+solvers_vs_best = char('teste_november_v4_500','DFMO_centroid_500funcevals','DMultiMadsPB_500funceval','dms_EB_dense_500funceval');
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic = char();

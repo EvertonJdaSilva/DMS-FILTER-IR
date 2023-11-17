@@ -12,7 +12,7 @@ problems_2
 solversleg_vs = char('DMS-FILTER-IR','DFMO','DmultiMads-PB','DMS-EB');
 solversleg = solversleg_vs;
 
-solvers_nstocastic = char('teste_november_v4_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_20000funcevals');
+solvers_nstocastic = char('teste_november10_4_v4_500','DFMO_centroid_500funcevals','DMultiMadsPB_500funceval','dms_EB_500funcevals');
 solver_nstocastic1 = solvers_nstocastic;
 solver_stocastic1 = char();
 run = 10; %number of runs for stocastic solvers
