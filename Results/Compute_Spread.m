@@ -9,10 +9,10 @@ problems_2
 %problems_newdominance_2  %62 problems
 
 
-solversleg_vs = char('DMS-FILTER-IR','DFMO','DmultiMads-PB','DMS-EB');
+solversleg_vs = char('DMS-FILTER-IR','DmultiMads-PB');%,'DFMO','DMS-EB');
 solversleg = solversleg_vs;
-
-solvers_nstocastic = char('teste_november10_4_v4_500','DFMO_centroid_500funcevals','DMultiMadsPB_500funceval','dms_EB_500funcevals');
+%
+solvers_nstocastic = char('teste_november_v4_500','DMultiMadsPB_500funceval_NEW');%,'DFMO_centroid_500funcevals','dms_EB_coordinate_500funceval');
 solver_nstocastic1 = solvers_nstocastic;
 solver_stocastic1 = char();
 run = 10; %number of runs for stocastic solvers

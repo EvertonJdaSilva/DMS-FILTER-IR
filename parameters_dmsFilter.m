@@ -108,7 +108,7 @@ spread_option = 1; % 0-2 variable: 1 if for each point in the current approximat
 %
 % Directions and step size.
 %
-dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be 
+dir_dense  = 5;    % 0-5 variable: 1 if a dense set of directions should be 
                    % considered for polling, 2 a dense set of direction as 
                    % it done in MADS; 3 or 4 if directions conforming the 
                    % boundary relative to the epsilon-active constraints,
@@ -129,7 +129,7 @@ dms_filter_par = 1;   % 0-1 variable: 0 if barrier function is used to remain al
 %
 par_ratio = 1;        % Parameter for ratio
 %
-tol_feasible = 10^-4; % Minimun value of constraint violation function to accept as feasible point
+tol_feasible = 10^-5; % Minimun value of constraint violation function to accept as feasible point
 %
 hmax_par = 0;         % 0-hmax variable: 0 if you do not want to supply hmax;
                       % otherwise if you want to provide it, just put the value

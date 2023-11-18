@@ -224,9 +224,9 @@ alfa      = [];
 INk       = [];
 Pfeasible = 0;
 if dir_dense  == 5
-    Psobol = sobolset(n);
+    Phalton = haltonset(n);
     p=primes(7919);        % 1000 primes numbers
-    isobol_ini = p(n);     % Initial sobol index.
+    ihalton_ini = p(n);     % Initial halton index.
 end
 func_eval = 0;
 match     = 0;
@@ -517,8 +517,8 @@ while (~halt)
          elseif (dir_dense == 4)
              [D,INk] = GSS_ABDP(func_C,Plist(:,1),0.1*alfa(1),INk,iter);
          elseif (dir_dense == 5)
-             isobol = isobol_ini+Llist(1);
-             q_aux = 2.0*Psobol(isobol+1,:)' - ones(n,1);
+             ihalton = ihalton_ini+Llist(1);
+             q_aux = 2.0*Phalton(ihalton+1,:)' - ones(n,1);
              zeta_f = norm(q_aux,2)/(2*norm(q_aux,Inf));
              qt = @(zeta)(-norm(round(zeta*q_aux./norm(q_aux)),2));
              g = @(zeta)(norm(round(zeta*q_aux./norm(q_aux)),2)-2^((abs(Llist(1)))/2));
