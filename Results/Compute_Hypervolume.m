@@ -5,8 +5,6 @@ problems_2
 %smooth_problems
 %problems_M % without the problems ZLT1_C3, ZLT1_C4, and ZLT1_C5.
 %problems_ALL
-%problems_newdominance_ALL %172 problems
-%problems_newdominance_2  %62 problems
 
 
 solversleg_vs = char('DMS-FILTER-IR','DFMO','DmultiMads-PB','DMS-EB');
@@ -14,7 +12,7 @@ solversleg = solversleg_vs;
 guarda_a = [];
 guarda_v = [];
 
-solvers_vs_best = char('teste_november_v4_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval_NEW','dms_EB_coordinate_20000funceval');
+solvers_vs_best = char('teste_november_v4_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_coordinate_20000funceval');
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic = char();
