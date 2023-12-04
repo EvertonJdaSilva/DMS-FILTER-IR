@@ -214,10 +214,17 @@ switch restoration_approach
             end
         end
     case 6
-        Opt = optimset('Display','off','GradConstr','on','GradObj','on');
-        % min 1/2||y-xk||.^2 s.t. g_i(y)<= (alfak/2)^2*g_i(xk) and y in X
-        alfak_gxk = ((alfak/2)^2)*feval(func_C,xk);
-        [y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
+        if ~isempty(grad_C)
+            Opt = optimset('Display','off','GradConstr','on','GradObj','on');
+            % min 1/2||y-xk||.^2 s.t. g_i(y)<= (alfak/2)^2*g_i(xk) and y in X
+            alfak_gxk = ((alfak/2)^2)*feval(func_C,xk);
+            [y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,3),Opt);
+        else
+            Opt = optimset('Display','off','GradConstr','off','GradObj','on');
+            % min 1/2||y-xk||.^2 s.t. g_i(y)<= (alfak/2)^2*g_i(xk) and y in X
+            alfak_gxk = ((alfak/2)^2)*feval(func_C,xk);
+            [y,~,exitflag] = fmincon(@(y)func_IR(y,xk),xk,[],[],[],[],lbound,ubound,@(y)violation_function(func_C,grad_C,y,alfak_gxk,2),Opt);
+        end        
         if exitflag ==1
             if cache ~= 0
                 ynorm        = norm(y,1);

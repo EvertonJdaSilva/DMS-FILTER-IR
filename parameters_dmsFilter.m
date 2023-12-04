@@ -32,7 +32,7 @@
 % Output Options.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-output = 0; % 0-2 variable: 0 if only a final report is displayed at the 
+output = 1; % 0-2 variable: 0 if only a final report is displayed at the 
             % screen; 1 if at each iteration output is displayed at the
             % screen and recorded in a text file stored at the current directory. 
             % If solving a biobjective problem, a plot of the approximated 
@@ -60,7 +60,7 @@ max_fevals = 20000; % Maximum number of function evaluations allowed.
 %
 % Initialization.
 %
-list = 3;   % 0-4 variable: 0 if the algorithm initializes the iterate
+list = 0;   % 0-4 variable: 0 if the algorithm initializes the iterate
             % list with a single point; 1 if a latin hypercube sampling
             % strategy is considered for initialization; 2 if 
             % random sampling is used; 3 if points are considered 
@@ -108,7 +108,7 @@ spread_option = 1; % 0-2 variable: 1 if for each point in the current approximat
 %
 % Directions and step size.
 %
-dir_dense  = 5;    % 0-5 variable: 1 if a dense set of directions should be 
+dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be 
                    % considered for polling, 2 a dense set of direction as 
                    % it done in MADS; 3 or 4 if directions conforming the 
                    % boundary relative to the epsilon-active constraints,
@@ -131,7 +131,7 @@ par_ratio = 1;        % Parameter for ratio
 %
 tol_feasible = 10^-5; % Minimun value of constraint violation function to accept as feasible point
 %
-hmax_par = 0;         % 0-hmax variable: 0 if you do not want to supply hmax;
+hmax_par = 6;         % 0-hmax variable: 0 if you do not want to supply hmax;
                       % otherwise if you want to provide it, just put the value
                       % hmax_par = hmax; where hmax is the intended value.
 %

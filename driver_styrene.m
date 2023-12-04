@@ -1,8 +1,8 @@
-%fp = fopen('dms_filter_styrene_ap1.m','wt');     % instrucao Windows
-fp = fopen('dms_filter_styrene_ap1_4.m','wt');      % instrucao Linux
+fp = fopen('Results\DMSFILTERIR_styrene_feas.m','wt');     % instrucao Windows
+%fp = fopen('Results/DMSFILTERIR_styrene.m','wt');      % instrucao Linux
 
 format compact;
-fprintf(fp,'dms_filter_styrene_ap1_4_s=[');
+fprintf(fp,'DMSFILTERIR_styrene_feas_s=[');
 lb     = zeros(8,1);
 ub     = 100*ones(8,1);
 xi     = [54, 66, 86, 8, 29, 51, 32, 15]';
@@ -10,7 +10,7 @@ func_F = 'styrene_multiobj';
 func_C = 'styrene_multiobj_constraints';
 
 
-[P,f,alfa,Plist_I,Flist_I,alfa_I,func_eval] = dms_filter(1,func_F,[],[],xi,lb,ub,func_C);
+[Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],[],xi,lb,ub,func_C,[],6); 
 
 [n,m]=size(f);
 
@@ -24,11 +24,11 @@ if ~isempty(f)
 end
 fprintf(fp,']'';\n\n');
 
-fprintf(fp,'dms_filter_styrene_ap1_4_func_evals=[');
+fprintf(fp,'DMSFILTERIR_styrene_func_evals=[');
 fprintf(fp,'%d,',func_eval);
 fprintf(fp,'%d]'';',func_eval);
 fclose(fp);
-save('dms_filter_styrene_line_ap1_4') 
+save('DMSFILTERIR_styrene') 
 
 
 clearvars -except problems nl_path nprobs
