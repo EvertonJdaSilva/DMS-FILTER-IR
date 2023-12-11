@@ -121,7 +121,7 @@ Llist_ini = 0;     % Initial mesh index.
 %
 beta_par  = 0.5;   % Coefficient for step size contraction.
 % 
-gamma_par = 1;     % Coefficient for step size expansion.
+gamma_par = 2;     % Coefficient for step size expansion.
 %
 %% Filter parameters
 dms_filter_par = 1;   % 0-1 variable: 0 if barrier function is used to remain all

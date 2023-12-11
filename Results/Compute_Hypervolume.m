@@ -7,12 +7,12 @@ problems_2
 %problems_ALL
 
 
-solversleg_vs = char('DMS-FILTER-IR','DFMO','DmultiMads-PB','DMS-EB');
+solversleg_vs = char('DMS-FILTER-IR','DmultiMads-PB');%'DFMO','DMS-EB');
 solversleg = solversleg_vs;
 guarda_a = [];
 guarda_v = [];
 
-solvers_vs_best = char('teste_november_v4_20000','DFMO_centroid_20000funcevals','DMultiMadsPB_20000funceval','dms_EB_coordinate_20000funceval');
+solvers_vs_best = char('dms_filter_IR1_5000funceval_V1','DMultiMadsPB_5000funceval');%,'DFMO_centroid_5000funcevals','dms_EB_coordinate_5000funceval');
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic = char();

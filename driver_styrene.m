@@ -1,8 +1,8 @@
-fp = fopen('Results\DMSFILTERIR_styrene_feas.m','wt');     % instrucao Windows
+fp = fopen('Results\DMSFILTERIR_styrene_feas_2.m','wt');     % instrucao Windows
 %fp = fopen('Results/DMSFILTERIR_styrene.m','wt');      % instrucao Linux
 
 format compact;
-fprintf(fp,'DMSFILTERIR_styrene_feas_s=[');
+fprintf(fp,'DMSFILTERIR_styrene_feas_2_s=[');
 lb     = zeros(8,1);
 ub     = 100*ones(8,1);
 xi     = [54, 66, 86, 8, 29, 51, 32, 15]';
