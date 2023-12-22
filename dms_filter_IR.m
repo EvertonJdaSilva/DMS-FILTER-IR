@@ -377,13 +377,7 @@ for i=1:size(Pini,2)
             if match
                 pdom = 1;
             else
-                if paretodominance_original
-                    [pdom,index_ndom] = paretodominance(Ftemp,Flist);
-                else
-                    %[pdom,index_ndom] = paretodominance_November(Ftemp,Flist);                    
-                    %[pdom,index_ndom] = paretodominance_November2(Ftemp,Flist,tol_feasible);
-                    [pdom,index_ndom] = paretodominance_November3(Ftemp,Flist,tol_feasible);
-                end
+                [pdom,index_ndom] = paretodominance(Ftemp,Flist);
                 if (pdom == 0)
                     Plist = [Plist(:,index_ndom),x_ini];
                     Flist = [Flist(:,index_ndom),Ftemp];
@@ -424,13 +418,13 @@ if output
     [~,index] = find(Flist(end,:)<= tol_feasible);
     Plist_aux = Plist(:,index);
     fprintf('Iteration Report: \n\n');
-    fprintf('| iter  | success | list size |  fpoints  |      min alpha    |     max alpha    |\n');
+    fprintf('| iter  | success | list size |  fpoints |      min alpha    |     max alpha    |\n');
     print_format = ('| %5d |    %2s   |   %5d   |   %5d   | %+13.8e | %+13.8e |\n');
-    fprintf(print_format, iter, '--', size(Plist,2), length(index), min(alfa), max(alfa));
+    fprintf(print_format, iter, '--', size(Plist_aux,2), length(index), min(alfa), max(alfa));
     fresult = fopen('dms_report.txt','w');
     fprintf(fresult,'Iteration Report: \n\n');
-    fprintf(fresult,'| iter  | success | list size |   fpoints  |    min alpha    |     max alpha    |\n');
-    fprintf(fresult,print_format, iter, '--', size(Plist,2), length(index), min(alfa), max(alfa));
+    fprintf(fresult,'| iter  | success | list size |  fpoints |    min alpha    |     max alpha    |\n');
+    fprintf(fresult,print_format, iter, '--',size(Plist_aux,2), length(index), min(alfa), max(alfa));
 end
 %
 
@@ -470,7 +464,7 @@ while (~halt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  
         if f_current_poll(end) > tol_feasible
-            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter,paretodominance_original,tol_feasible);
+            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter);
             if Restoration_success
                 success = 1;
                 poll = 0;
@@ -607,13 +601,10 @@ while (~halt)
                if match
                    pdom = 1;
                else
-                   if paretodominance_original
-                       [pdom,index_ndom] = paretodominance(Ftemp,Flist);
-                   else
-                       %[pdom,index_ndom] = paretodominance_November(Ftemp,Flist); 
-                       %[pdom,index_ndom] = paretodominance_November2(Ftemp,Flist,tol_feasible);                       
-                       [pdom,index_ndom] = paretodominance_November3(Ftemp,Flist,tol_feasible);
-                   end
+                   [pdom,index_ndom] = paretodominance(Ftemp,Flist);
+                   %[pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
+                   %[pdom,index_ndom] = paretodominance_MAY(Ftemp,Flist,tol_feasible);
+                   %[pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);
                    if (pdom == 0)
                        if f_current_poll(end)>tol_feasible && Ftemp(end)<f_current_poll(end) && index_ndom(1) ~= 0
                            improving = 1;

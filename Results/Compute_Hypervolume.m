@@ -1,5 +1,4 @@
 clear;
-%{'Kursawe_C3','MOP4_C3','WFG2_C3','WFG3_C3','ZLT1_C3','TKLY1_C5'}
 
 problems_2
 %smooth_problems
@@ -7,12 +6,12 @@ problems_2
 %problems_ALL
 
 
-solversleg_vs = char('DFMO','DMS-EB_{\oplus}','DMS-EB_{dense}');%('DMS-FILTER-IR','DmultiMads-PB');%'DFMO','DMS-EB');
+solversleg_vs = char('DMS-FILTER-IR - par\_ratio=1','DMS-FILTER-IR - par\_ratio=2');%,'DFMO','DmultiMads-PB','DMS-EB'
 solversleg = solversleg_vs;
 guarda_a = [];
 guarda_v = [];
 
-solvers_vs_best = char('DFMO_centroid_20000funcevals','dms_EB_coordinate_20000funceval','dms_EB_20000funcevals');%'dms_filter_IR1_5000funceval_V1','DMultiMadsPB_5000funceval');%,'DFMO_centroid_5000funcevals','dms_EB_coordinate_5000funceval');
+solvers_vs_best = char('DMSFILTERIR_PD_V3_500','DMSFILTERIR_PD_V3_t1_500');%'DFMO_centroid_5000funcevals','DMultiMadsPB_5000funceval','dms_EB_coordinate_5000funceval');
 solvers = solvers_vs_best;
 solver_nstocastic= solvers_vs_best;
 solver_stocastic = char();
@@ -92,7 +91,7 @@ Titulo = 'Hypervolume performance profile';
 
 file= 'all';
 GenProfile;
-axis([1 15 0 1])
+axis([0.8 15 0 1])
 
 print -dpdf Hypervolume.pdf
 print -depsc Hypervolume.eps

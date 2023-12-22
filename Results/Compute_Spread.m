@@ -7,10 +7,10 @@ problems_2
 %problems_ALL
 
 
-solversleg_vs = char('DFMO','DMS-EB_{\oplus}','DMS-EB_{dense}');%('DMS-FILTER-IR','DmultiMads-PB');%'DFMO','DMS-EB');
+solversleg_vs = char('DMS-FILTER-IR_{\oplus}','DMS-FILTER-IR_{dense}');%,'DFMO','DmultiMads-PB','DMS-EB'
 solversleg = solversleg_vs;
-%
-solvers_nstocastic = char('DFMO_centroid_20000funcevals','dms_EB_coordinate_20000funceval','dms_EB_halton_20000funceval');%'dms_filter_IR1_5000funceval_V1','DMultiMadsPB_5000funceval');%,'DFMO_centroid_5000funcevals','dms_EB_coordinate_5000funceval');
+
+solvers_nstocastic = char('DMSFILTERIR_PD_V3_5000','DMSFILTERIR_PD_V3_dense_5000');%'DFMO_centroid_5000funcevals','DMultiMadsPB_5000funceval','dms_EB_coordinate_5000funceval');
 solver_nstocastic1 = solvers_nstocastic;
 solver_stocastic1 = char();
 run = 10; %number of runs for stocastic solvers
@@ -236,7 +236,7 @@ legenda = solversleg_vs;
 Titulo = ' \Gamma performance profile ';
 file= 'Xi_avg_all';
 GenProfile;
-axis([1 15 0 1])
+axis([0.8 15 0 1])
 
 print -depsc Spread_Gamma.eps
 print -dpng Spread_Gamma.png

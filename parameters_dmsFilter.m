@@ -32,7 +32,7 @@
 % Output Options.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-output = 1; % 0-2 variable: 0 if only a final report is displayed at the 
+output = 0; % 0-2 variable: 0 if only a final report is displayed at the 
             % screen; 1 if at each iteration output is displayed at the
             % screen and recorded in a text file stored at the current directory. 
             % If solving a biobjective problem, a plot of the approximated 
@@ -52,7 +52,7 @@ tol_stop  = 10^-3; % Lowest value allowed for the step size parameter.
 stop_feval = 1;     % 0-1 variable: 1 if the stopping criterion is based
                     % on a maximum number of function evaluations; 0
                     % otherwise.
-max_fevals = 20000; % Maximum number of function evaluations allowed.
+max_fevals = 500;   % Maximum number of function evaluations allowed.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Algorithmic Options.
@@ -60,7 +60,7 @@ max_fevals = 20000; % Maximum number of function evaluations allowed.
 %
 % Initialization.
 %
-list = 0;   % 0-4 variable: 0 if the algorithm initializes the iterate
+list = 3;   % 0-4 variable: 0 if the algorithm initializes the iterate
             % list with a single point; 1 if a latin hypercube sampling
             % strategy is considered for initialization; 2 if 
             % random sampling is used; 3 if points are considered 
@@ -87,7 +87,7 @@ cache = 1; % 0-1 variable: 0 if point evaluation is always done;
 tol_match = tol_stop; % Tolerance used in point comparisons, when 
                       % considering a cache.
 %
-save_cache = 0; % 0-2 variable: 1 if at the end of all iterations,
+save_cache = 1; % 0-2 variable: 1 if at the end of all iterations,
                 % the current cache is saved on a file for posterior use;
                 % 2 if cache is saved at the end of each iteration;
                 % 0 otherwise. 
@@ -113,7 +113,7 @@ dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be
                    % it done in MADS; 3 or 4 if directions conforming the 
                    % boundary relative to the epsilon-active constraints,
                    % 3: GSS_LST and 4: GSS_ABDP, 5: dense generation 
-                   % using sobol sequences; 0 otherwise.
+                   % using halton sequences; 0 otherwise.
 %
 alfa_ini  = 1;     % Initial step size. 
 %
@@ -121,17 +121,17 @@ Llist_ini = 0;     % Initial mesh index.
 %
 beta_par  = 0.5;   % Coefficient for step size contraction.
 % 
-gamma_par = 2;     % Coefficient for step size expansion.
+gamma_par = 1;     % Coefficient for step size expansion.
 %
 %% Filter parameters
 dms_filter_par = 1;   % 0-1 variable: 0 if barrier function is used to remain all
                       % points feasible; 1 if filter method is used
 %
-par_ratio = 1;        % Parameter for ratio
+par_ratio = 2;        % Parameter for ratio
 %
 tol_feasible = 10^-5; % Minimun value of constraint violation function to accept as feasible point
 %
-hmax_par = 6;         % 0-hmax variable: 0 if you do not want to supply hmax;
+hmax_par = 0;         % 0-hmax variable: 0 if you do not want to supply hmax;
                       % otherwise if you want to provide it, just put the value
                       % hmax_par = hmax; where hmax is the intended value.
 %
@@ -140,7 +140,6 @@ sort_filter_par = 1;  % oder the list of ponts in some way to choose the poll ce
 oport_approach = 0;   % the approach used to says that an approach oportunistic or complete polling
 %
 %rho = 0.1;
-paretodominance_original = 0;
 %% Inexact Restoration parameters
 %restoration_approach = 6;
 

@@ -51,11 +51,7 @@ elseif (count_poll_1 == count_poll && ~isempty(Ffeasible) && ~isempty(Finfeasibl
         indaux=indaux+1;
     end
     %%% Verifies which points is insid of the boll of ratio par_ratio*alfa(end)
-    %if Flist1(end,end)>tol_feasible
-    %indaux1 = find(distancia<=par_ratio*alfa1(end));
-    %else
     indaux1 = find(distancia<=par_ratio*alfa1(end) & distancia~=0);
-    %end
     if isempty(indaux1)
         indaux1=length(indaux);
     end

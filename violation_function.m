@@ -37,10 +37,18 @@ switch grad_aval
         % Compute nonlinear equalities at x.
         ceq     = [];
         gradceq = [];
-    otherwise
+    case 3
         % Compute nonlinear inequalities at x.
         c       = feval(func_C,x)-epsilon;     
         gradc   = feval(grad_C,x);               
+
+        % Compute nonlinear equalities at x.
+        ceq     = [];
+        gradceq = [];
+    otherwise
+        % Compute nonlinear inequalities at x.
+        c       = max(0,feval(func_C,x))-epsilon;     
+        gradc   = [];               
 
         % Compute nonlinear equalities at x.
         ceq     = [];
