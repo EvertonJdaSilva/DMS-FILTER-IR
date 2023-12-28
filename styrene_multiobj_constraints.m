@@ -33,7 +33,7 @@ fclose(input_file);
 output_file_name = 'styrene_tmp_f_';
 output_file_name = strcat(output_file_name,int2str(pid),'.txt');
 
-cmd  = sprintf ( '%s%s%s%s' , './styrene.exe ' , input_file_name , ' > ' , output_file_name );
+cmd  = sprintf ( '%s%s%s%s' , 'styrene.exe ' , input_file_name , ' > ' , output_file_name );
 flag = system(cmd);
 
 if ( flag == 1 )

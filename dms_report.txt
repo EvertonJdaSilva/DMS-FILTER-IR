@@ -1,0 +1,4 @@
+Iteration Report: 
+
+| iter  | success | list size |  fpoints |    min alpha    |     max alpha    |
+|     0 |    --   |       0   |       0   | +1.00000000e+00 | +1.00000000e+00 |
