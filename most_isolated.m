@@ -2,14 +2,17 @@ function [Psort,Fsort,Lsort,alfasort] = most_isolated(P,F,L,alfa,stop_alfa,tol_s
 %
 % Purpose:
 %
-%    Function most_isolated sorts a list of points according to the largest
-%    gap between two consecutive points in the list considered...
+%    Function most_isolated sorts a list of points according to the most
+%    isolated point in the list considered.
 %
 % Input:
 %
 %         P (List of points.)
 %
 %         F (Function values corresponding to the points in the list.)
+%
+%         L (List of indices for Halton sequences, 
+%            used only when directions are dense generated)
 %
 %         alfa (Step size parameters corresponding to the points in the list.)
 %
@@ -24,6 +27,8 @@ function [Psort,Fsort,Lsort,alfasort] = most_isolated(P,F,L,alfa,stop_alfa,tol_s
 %         Psort (Sorted list of points.)
 %
 %         Fsort (Function values corresponding to the points in the sorted list.)
+%
+%         Lsort (Sorted list of indices.)
 %
 %         alfa (Step size parameters corresponding to the points in the
 %         sorted list.)

@@ -1,5 +1,5 @@
 function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,file_ini,...
-                                        file_cache,x_ini,lbound,ubound,func_C,grad_C,restoration_approach)
+                                        file_cache,x_ini,lbound,ubound,func_C)
 %
 % Purpose:
 %
@@ -7,8 +7,8 @@ function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,
 % multiobjective optimization problem using filter approach:
 %
 %    min  F(x) = (f_1(x),f_2(x),...,f_m(x))  
-%    s.t. Ax <= b  
-%         c_j(x) <= 0, j = 1,...,p,
+%    s.t. c_j(x) <= 0, j = 1,...,p,
+%          x in X
 %
 % where x is a real vector of dimension n, A a rational matrix and b is a
 % real vector of dimension n.The derivatives of the functionsf_i,
@@ -49,12 +49,12 @@ function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,
 %
 % Output:
 %
-%         Plist (List of current nondominated points.)
+%         Plist_F (List of current feasible nondominated points.)
 %
-%         Flist (List of function values corresponding to current 
-%               nondominated points.)
+%         Flist_F (List of function values corresponding to current 
+%               feasible nondominated points.)
 %
-%         alfa (List of step size parameters.)
+%         alfa_F (List of step size parameters.)
 %
 %         func_eval (Total number of function evaluations.)
 %
@@ -64,7 +64,7 @@ function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,
 %
 % Functions called: func_F, func_C, search_step (application, user provided)
 %
-%                   parameters_dms, paretodominance (provided by the optimizer).
+%                   parameters_dmsFilter, paretodominance (provided by the optimizer).
 %
 % DMS Version 0.3.
 %
@@ -165,7 +165,7 @@ else
 %    
 %     Set seed for random strategies used in the iterate list initialization.
 %
-     rand('state',sum(100*clock)); %#ok<*RAND> 
+     rand('state',sum(100*clock));
 %
       if (user_list_size == 0)
          nPini = n;
@@ -226,18 +226,18 @@ Pfeasible = 0;
 if dir_dense  == 5
     Phalton = haltonset(n);
     p=primes(7919);        % 1000 primes numbers
-    ihalton_ini = p(n);     % Initial halton index.
+    ihalton_ini = p(n);    % Initial halton index.
 end
 func_eval = 0;
 match     = 0;
 if cache
     if load_cache
        fcache = fopen(file_cache,'r');
-       aux    = str2num(fgetl(fcache)); %#ok<*ST2NM> 
+       aux    = str2num(fgetl(fcache)); 
        n      = aux(1);
        m      = aux(2);
        k      = aux(3);
-       aux    = str2num(fgetl(fcache)); %#ok<*NASGU> 
+       aux    = str2num(fgetl(fcache));
        for i = 1:n
           aux = str2num(fgetl(fcache));
           for j = 1:m
@@ -248,7 +248,7 @@ if cache
        for i = 1:k
          aux = str2num(fgetl(fcache));
          for j = 1:m
-            CacheF(i,j) = aux(j); %#ok<*AGROW> 
+            CacheF(i,j) = aux(j);
          end
        end
        aux = str2num(fgetl(fcache));
@@ -269,7 +269,7 @@ end
 if hmax_par ~= 0
     hmax = hmax_par;
 else
-    hauxevert = [];
+    H_xini = [];
     for i=1:size(Pini,2)
         x_ini = Pini(:,i);
         feasible_lin = 1;
@@ -278,7 +278,7 @@ else
             bound = [bound ; x_ini - ubound];
         end
         if ~isempty(lbound)
-            bound = [bound ; - x_ini + lbound]; %#ok<*AGROW> 
+            bound = [bound ; - x_ini + lbound];
         end
         if ~isempty(bound)
             m  = size(bound,1);
@@ -287,13 +287,13 @@ else
             end
         end
         if feasible_lin
-            h_aux    = feval(func_C,x_ini);
-            hx       = max(0,h_aux);
-            h        = norm(hx,2).^2;
-            hauxevert = [h,hauxevert]; 
+            h_aux  =feval(func_C,x_ini);
+            hx     = max(0,h_aux);
+            h      = norm(hx,2).^2;
+            H_xini = [h,H_xini]; 
         end
     end
-     hmax_aux1 = setdiff(hauxevert,Inf);
+     hmax_aux1 = setdiff(H_xini,Inf);
      hmax_aux2 = max(10,0.5*length(h_aux));
      [~,ind_maxj]  = max(hmax_aux1);
      hmax_aux1 = hmax_aux1(ind_maxj);
@@ -464,7 +464,7 @@ while (~halt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  
         if f_current_poll(end) > tol_feasible
-            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,grad_C,lbound,ubound,restoration_approach,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match,iter);
+            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match);
             if Restoration_success
                 success = 1;
                 poll = 0;
@@ -733,7 +733,7 @@ while (~halt)
 %
 %     Check if the stopping criteria are satisfied.
 %
-      if stop_alfa && (sum(alfa >= tol_stop)==0) %(sum(alfa < tol_stop)) %
+      if stop_alfa && (sum(alfa >= tol_stop)==0)
          halt = 1;
       end
       if stop_feval && (func_eval >= max_fevals)

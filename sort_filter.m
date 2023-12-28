@@ -1,8 +1,7 @@
 function [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,count_poll_1,count_poll)
 
 
-% Mudar para o passo de não admissibilidade:
-% Todos os pontos de polling tem h(x)>0
+% Switch to the inadmissibility step when all polling points have h(x)>0
 
 if nargin<9, count_poll_1 = 0; count_poll=1; end
 
@@ -52,9 +51,6 @@ elseif (count_poll_1 == count_poll && ~isempty(Ffeasible) && ~isempty(Finfeasibl
     end
     %%% Verifies which points is insid of the boll of ratio par_ratio*alfa(end)
     indaux1 = find(distancia<=par_ratio*alfa1(end) & distancia~=0);
-    if isempty(indaux1)
-        indaux1=length(indaux);
-    end
     % Points out of the boll
     indaux2 = setdiff(1:size(Pinfeasible,2),indaux1);
     % Find the least value of h inside the boll

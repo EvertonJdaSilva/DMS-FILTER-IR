@@ -1246,9 +1246,6 @@ problem(175).x_ini = 2*ones(4,1);
 problem(175).Constraint = 'C5';
 problem(175).grad_Constraint = 'grad_C5';
 
-% for j=1:8
-%  zmax(j)=2*j;
-% end
 problem(176).name   = 'WFG1';
 problem(176).lbound = zeros(8,1);
 problem(176).ubound = zmax';
@@ -1534,14 +1531,14 @@ format compact;
 %%_______________________________________________________________________
 
 nprobs=214;
-fp = fopen('Results\DMSFILTERIR_PD_V3_t1_500.m','wt');     % instrucao Windows
+fp = fopen('Results\teste.m','wt');     % instrucao Windows
 % fp =fopen('Results/DMSFILTERIR_PD_V2_500.m','wt');      % instrucao Linux
 
 func_evals=zeros(nprobs,1);
 for i=1:nprobs
    fprintf('==================  Problema %3d ================== \n' ,i)
-   fprintf(fp,'DMSFILTERIR_PD_V3_t1_500_%s_%s=[',problem(i).name,problem(i).Constraint);
-   file_cache = ['DMSFILTERIR_PD_V3_t1_500_' problem(i).name '_' problem(i).Constraint '_cache.txt'];   
+   fprintf(fp,'teste_%s_%s=[',problem(i).name,problem(i).Constraint);
+   file_cache = ['teste_' problem(i).name '_' problem(i).Constraint '_cache.txt'];   
    lb     = problem(i).lbound;
    ub     = problem(i).ubound;   
    xi     = problem(i).x_ini;
@@ -1549,7 +1546,7 @@ for i=1:nprobs
    func_C = problem(i).Constraint;
    grad_C = problem(i).grad_Constraint;
 
-   [Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C,grad_C,6);
+   [Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C);
 
    
    func_evals(i)=func_eval;

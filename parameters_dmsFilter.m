@@ -32,7 +32,7 @@
 % Output Options.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-output = 0; % 0-2 variable: 0 if only a final report is displayed at the 
+output = 1; % 0-2 variable: 0 if only a final report is displayed at the 
             % screen; 1 if at each iteration output is displayed at the
             % screen and recorded in a text file stored at the current directory. 
             % If solving a biobjective problem, a plot of the approximated 
@@ -52,7 +52,7 @@ tol_stop  = 10^-3; % Lowest value allowed for the step size parameter.
 stop_feval = 1;     % 0-1 variable: 1 if the stopping criterion is based
                     % on a maximum number of function evaluations; 0
                     % otherwise.
-max_fevals = 500;   % Maximum number of function evaluations allowed.
+max_fevals = 5000;  % Maximum number of function evaluations allowed.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Algorithmic Options.
@@ -87,7 +87,7 @@ cache = 1; % 0-1 variable: 0 if point evaluation is always done;
 tol_match = tol_stop; % Tolerance used in point comparisons, when 
                       % considering a cache.
 %
-save_cache = 1; % 0-2 variable: 1 if at the end of all iterations,
+save_cache = 0; % 0-2 variable: 1 if at the end of all iterations,
                 % the current cache is saved on a file for posterior use;
                 % 2 if cache is saved at the end of each iteration;
                 % 0 otherwise. 
@@ -123,24 +123,27 @@ beta_par  = 0.5;   % Coefficient for step size contraction.
 % 
 gamma_par = 1;     % Coefficient for step size expansion.
 %
-%% Filter parameters
+% Filter parameters
+%
 dms_filter_par = 1;   % 0-1 variable: 0 if barrier function is used to remain all
                       % points feasible; 1 if filter method is used
 %
-par_ratio = 2;        % Parameter for ratio
+par_ratio = 2;        % Parameter that multiplies the ratio for selection
+                      % of an infesible poll center (1/beta_par)
 %
-tol_feasible = 10^-5; % Minimun value of constraint violation function to accept as feasible point
+tol_feasible = 10^-5; % Minimun value of constraint violation function to
+                      % accept a point as feasible point.
 %
-hmax_par = 0;         % 0-hmax variable: 0 if you do not want to supply hmax;
-                      % otherwise if you want to provide it, just put the value
+hmax_par = 0;         % 0-hmax variable: 0 if you do not want to supply hmax
+                      % and the algorithm computes aumotically; otherwise
+                      % if you want to provide it, just put the value
                       % hmax_par = hmax; where hmax is the intended value.
 %
-sort_filter_par = 1;  % oder the list of ponts in some way to choose the poll center
+sort_filter_par = 1;  % 0-1 variable: 1 if order the list of ponts in some 
+                      % way to choose the poll center, 0 take the first
+                      % point in the list.
 %
-oport_approach = 0;   % the approach used to says that an approach oportunistic or complete polling
+oport_approach = 0;   % 0-1 variable: 1 if an oportunistic approach is considered;
+                      % 0 for complete polling
 %
-%rho = 0.1;
-%% Inexact Restoration parameters
-%restoration_approach = 6;
-
 % End of parameters_dms.
