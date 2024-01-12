@@ -420,11 +420,11 @@ if output
     fprintf('Iteration Report: \n\n');
     fprintf('| iter  | success | list size |  fpoints |      min alpha    |     max alpha    |\n');
     print_format = ('| %5d |    %2s   |   %5d   |   %5d   | %+13.8e | %+13.8e |\n');
-    fprintf(print_format, iter, '--', size(Plist_aux,2), length(index), min(alfa), max(alfa));
+    fprintf(print_format, iter, '--', size(Plist,2), length(index), min(alfa), max(alfa));
     fresult = fopen('dms_report.txt','w');
     fprintf(fresult,'Iteration Report: \n\n');
     fprintf(fresult,'| iter  | success | list size |  fpoints |    min alpha    |     max alpha    |\n');
-    fprintf(fresult,print_format, iter, '--',size(Plist_aux,2), length(index), min(alfa), max(alfa));
+    fprintf(fresult,print_format, iter, '--',size(Plist,2), length(index), min(alfa), max(alfa));
 end
 %
 
