@@ -1531,13 +1531,14 @@ format compact;
 %%_______________________________________________________________________
 
 nprobs=214;
-fp = fopen('Results\teste.m','wt');     % instrucao Windows
+fp = fopen('Results\teste0708_5k.m','wt');     % instrucao Windows
 % fp =fopen('Results/DMSFILTERIR_PD_V2_500.m','wt');      % instrucao Linux
 
 func_evals=zeros(nprobs,1);
-for i=1:nprobs
+contador=zeros(nprobs,1);
+for i=210%1:nprobs
    fprintf('==================  Problema %3d ================== \n' ,i)
-   fprintf(fp,'teste_%s_%s=[',problem(i).name,problem(i).Constraint);
+   fprintf(fp,'teste0708_5k_%s_%s=[',problem(i).name,problem(i).Constraint);
    file_cache = ['teste_' problem(i).name '_' problem(i).Constraint '_cache.txt'];   
    lb     = problem(i).lbound;
    ub     = problem(i).ubound;   
@@ -1546,10 +1547,11 @@ for i=1:nprobs
    func_C = problem(i).Constraint;
    grad_C = problem(i).grad_Constraint;
 
-   [Plist_F,f,alfa_F,func_eval] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C);
+   [Plist_F,f,alfa_F,func_eval,count_IR] = dms_filter_IR(1,func_F,[],file_cache,[],lb,ub,func_C);
 
    
    func_evals(i)=func_eval;
+   contador(i)=count_IR;
    [n,m]=size(f);
    if ~isempty(f)
        for k=1:n

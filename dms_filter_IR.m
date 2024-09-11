@@ -1,4 +1,4 @@
-function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,file_ini,...
+function [Plist_F,Flist_F,alfa_F,func_eval,count_IR] = dms_filter_IR(Pareto_front,func_F,file_ini,...
                                         file_cache,x_ini,lbound,ubound,func_C)
 %
 % Purpose:
@@ -399,6 +399,9 @@ end
 if isempty(Flist)
     fprintf('Error: The optimizer did not generate a point\n');
     return
+else
+    [~,index] = find(Flist(end,:)<= tol_feasible);
+    center_F  = ~isempty(index);
 end
 %
 % Set seed for random generation of poll directions.
@@ -427,7 +430,9 @@ if output
     fprintf(fresult,print_format, iter, '--',size(Plist,2), length(index), min(alfa), max(alfa));
 end
 %
-
+count_IR = 0;
+con_F = 0;
+IR_success = [];
 while (~halt)
    func_iter = 0;
    move      = 0;
@@ -449,26 +454,36 @@ while (~halt)
 %
 %        Choose the poll center
 %
-         if (sort_filter_par ~= 0)
+         if (sort_filter_par ~= 0)               
              if iter == 0 || Restoration_success
-                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio);
+                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F);                 
              else
-                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,count_poll_1,count_poll);
+                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,count_poll_1,count_poll,f_current_poll);
              end
              f_current_poll = Flist(:,1);
              p_current_poll = Plist(:,1);
+             if iter==0
+                 centerOLD = f_current_poll;
+             end
          end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     Restoration Phase: Feasibility Step
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  
-        if f_current_poll(end) > tol_feasible
-            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match);
+        if (f_current_poll(end) > tol_feasible && ~only_filter)
+            [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success,Fy] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match);            
             if Restoration_success
+                IR_success = [IR_success Fy];
+                if Fy(end) <= tol_feasible && ~isempty(Fy)
+                    center_F   = 1;                    
+                else
+                    center_F   = 0;                    
+                end
                 success = 1;
                 poll = 0;
             else 
+                center_F = 0;
                 poll = 1;
             end
         end
@@ -717,9 +732,14 @@ while (~halt)
 %     
       if success
          alfa(logical(added))  = alfa(logical(added))*gamma_par;
+         centerOLD = f_current_poll;
       else
          alfa(logical(added))  = alfa(logical(added))*beta_par;
          Llist(logical(added)) = Llist(logical(added))+1;
+         if f_current_poll(end) > tol_feasible && sum(centerOLD == f_current_poll)==length(centerOLD) && sum(sum(f_current_poll == IR_success)==length(centerOLD))
+             count_IR = count_IR + 1; 
+             centerOLD = f_current_poll;
+         end
       end     
    else
       nPlist = size(Plist,2);

@@ -1,9 +1,10 @@
-function [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match)
+function [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success,Fy] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match)
 xk                  = Plist(:,1);
 alfak               = alfa(1);
 Restoration_success = 0;
 index_poll_center   = 1;
 added               = zeros(1,size(Plist,2));
+Fy                  = [];
 %%% Solve the restoration problem
 % If the poll center is not feasible find y such that y is a solution of
 % the following problem:

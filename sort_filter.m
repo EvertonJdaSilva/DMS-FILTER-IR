@@ -1,9 +1,8 @@
-function [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,count_poll_1,count_poll)
+function [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,count_poll_1,count_poll,f_current_poll)
 
 
 % Switch to the inadmissibility step when all polling points have h(x)>0
-
-if nargin<9, count_poll_1 = 0; count_poll=1; end
+if nargin<10, count_poll_1 = 0; count_poll=1; f_current_poll = []; end 
 
 %%% Indices corresponding to points that the step lenght is greater than tol_stop
 index1 = find(alfa>tol_stop);
@@ -39,33 +38,50 @@ if isempty(Ffeasible) && ~isempty(Finfeasible)
     Llist       = [Linfeasible(ind_inf),Llist(index2)];
     alfa        = [alfainfeasible(ind_inf),alfa(index2)];
 % All the points are infeasible and we also have feasible points
-elseif (count_poll_1 == count_poll && ~isempty(Ffeasible) && ~isempty(Finfeasible))
-    % Compute the distance among the infeasible point and the last poll center
-    % the last point in the list corresponds to the previous poll center
-    y = Plist1(:,end)-Pinfeasible(:,1:end);
-    indaux    = 1;
-    distancia = zeros(size(y,2),1);
-    while indaux<= size(y,2)
-        distancia(indaux)=norm(y(:,indaux));
-        indaux=indaux+1;
+elseif ((count_poll_1 == count_poll || ~center_F) && ~isempty(Ffeasible) && ~isempty(Finfeasible))
+    if ~isempty(f_current_poll)
+        if f_current_poll(end)>tol_feasible        
+            ind     = find(sum(f_current_poll==Finfeasible,[])==length(f_current_poll));
+            ind_inf = setdiff(1:size(Finfeasible,2),ind);
+            Plist   = [Pinfeasible(:,ind),Pfeasible,Pinfeasible(:,ind_inf),Plist(:,index2)];
+            Flist   = [Finfeasible(:,ind),Ffeasible,Finfeasible(:,ind_inf),Flist(:,index2)];
+            Llist   = [Linfeasible(ind),Lfeasible,Linfeasible(ind_inf),Llist(index2)];
+            alfa    = [alfainfeasible(ind),alfafeasible,alfainfeasible(ind_inf),alfa(index2)];            
+            goon    = 0;
+        else
+            goon    = 1;
+        end
+    else
+        goon = 1;
     end
-    %%% Verifies which points is insid of the boll of ratio par_ratio*alfa(end)
-    indaux1 = find(distancia<=par_ratio*alfa1(end) & distancia~=0);
-    % Points out of the boll
-    indaux2 = setdiff(1:size(Pinfeasible,2),indaux1);
-    % Find the least value of h inside the boll
-    [~,ind_Flist_aux2_leasth] = min(Finfeasible(end,indaux1));  
-    t = indaux1(ind_Flist_aux2_leasth);
-    r = setdiff(indaux1,t);
-    Plist_aux2 = [Pinfeasible(:,t),Pinfeasible(:,r),Pinfeasible(:,indaux2)];
-    Flist_aux2 = [Finfeasible(:,t),Finfeasible(:,r),Finfeasible(:,indaux2)];
-    alfa_aux2  = [alfainfeasible(t),alfainfeasible(r),alfainfeasible(indaux2)];
-    Llist_aux2 = [Linfeasible(t),Linfeasible(r),Linfeasible(indaux2)];
-    %%% ordered
-    Plist = [Plist_aux2,Pfeasible,Plist(:,index2)];
-    Flist = [Flist_aux2,Ffeasible,Flist(:,index2)];
-    Llist = [Llist_aux2,Lfeasible,Llist(index2)];
-    alfa  = [alfa_aux2,alfafeasible,alfa(index2)];
+    if goon
+        % Compute the distance among the infeasible point and the last poll center
+        % the last point in the list corresponds to the previous poll center
+        y = Pfeasible(:,end)-Pinfeasible(:,1:end);
+        indaux    = 1;
+        distancia = zeros(size(y,2),1);
+        while indaux<= size(y,2)
+            distancia(indaux)=norm(y(:,indaux));
+            indaux=indaux+1;
+        end
+        %%% Verifies which points is insid of the boll of ratio par_ratio*alfa(end)
+        indaux1 = find(distancia<=par_ratio*alfa1(end) & distancia~=0);
+        % Points out of the boll
+        indaux2 = setdiff(1:size(Pinfeasible,2),indaux1);
+        % Find the least value of h inside the boll
+        [~,ind_Flist_aux2_leasth] = min(Finfeasible(end,indaux1));
+        t = indaux1(ind_Flist_aux2_leasth);
+        r = setdiff(indaux1,t);
+        Plist_aux2 = [Pinfeasible(:,t),Pinfeasible(:,r),Pinfeasible(:,indaux2)];
+        Flist_aux2 = [Finfeasible(:,t),Finfeasible(:,r),Finfeasible(:,indaux2)];
+        alfa_aux2  = [alfainfeasible(t),alfainfeasible(r),alfainfeasible(indaux2)];
+        Llist_aux2 = [Linfeasible(t),Linfeasible(r),Linfeasible(indaux2)];
+        %%% ordered
+        Plist = [Plist_aux2,Pfeasible,Plist(:,index2)];
+        Flist = [Flist_aux2,Ffeasible,Flist(:,index2)];
+        Llist = [Llist_aux2,Lfeasible,Llist(index2)];
+        alfa  = [alfa_aux2,alfafeasible,alfa(index2)];
+    end
 else
     [Psort,Fsort,Lsort,alfasort] = most_isolated(Pfeasible,Ffeasible,Lfeasible,alfafeasible,stop_alfa,tol_stop);
     Plist = [Psort,Pinfeasible,Plist(:,index2)];
