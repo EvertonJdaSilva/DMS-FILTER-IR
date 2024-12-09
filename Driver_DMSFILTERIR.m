@@ -11,4 +11,4 @@ xlabel('f1')
 ylabel('f2')
 legenda=char('DMS-FILTER-IR');
 l1=legend(legenda,'Location','northeast','FontSize',10);
-print(fig,'-djpeg','Example.jpg')
+print(fig,'-dpng','Example.png')

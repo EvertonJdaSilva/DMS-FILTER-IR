@@ -50,7 +50,7 @@ elseif ((count_poll_1 == count_poll || ~center_F) && ~isempty(Ffeasible) && ~ise
         if ~isempty(ind)    
             % Therefore, we persist at the last admissible point until a
             % successful IR occurs, admissibility is restored at the poll
-            % step, or the admissible point converges (isempty(ind)=1).
+            % step, or the admissible point converged (isempty(ind)=1).
             ind_inf = setdiff(1:size(Finfeasible,2),ind);
             Plist   = [Pinfeasible(:,ind),Pfeasible,Pinfeasible(:,ind_inf),Plist(:,index2)];
             Flist   = [Finfeasible(:,ind),Ffeasible,Finfeasible(:,ind_inf),Flist(:,index2)];

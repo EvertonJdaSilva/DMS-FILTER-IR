@@ -1,12 +1,12 @@
 <p>
-  <img src="Example.jpg" width="49%" />
+  <img src="Example.png" width="49%" />
 </p>
 
 ##  Inexact Restoration Direct Multisearch Filter Approach to Multiobjective Constrained Derivative-free Optimization - DMS-FILTER-IR
 
 Implementation of the DMS-FILTER-IR framework proposed in 
 
-[Silva, E. J., Cust\'odio, A. L. (2024). An inexact restoration direct multisearch filter approach to multiobjective constrained derivative-free optimization. Optimization Methods and Software, 1–27.](https://doi.org/10.1080/10556788.2024.2412646)
+[Silva, E. J., Custódio, A. L. (2024). An inexact restoration direct multisearch filter approach to multiobjective constrained derivative-free optimization. Optimization Methods and Software, 1–27.](https://doi.org/10.1080/10556788.2024.2412646)
 
 If you have used our code for research purposes, please cite the publication mentioned above.
 For the sake of simplicity, we provide the Bibtex format:
