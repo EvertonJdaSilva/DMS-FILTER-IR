@@ -1,4 +1,4 @@
-function [Plist_F,Flist_F,alfa_F,func_eval,count_IR] = dms_filter_IR(Pareto_front,func_F,file_ini,...
+function [Plist_F,Flist_F,alfa_F,func_eval] = dms_filter_IR(Pareto_front,func_F,file_ini,...
                                         file_cache,x_ini,lbound,ubound,func_C)
 %
 % Purpose:
@@ -8,11 +8,10 @@ function [Plist_F,Flist_F,alfa_F,func_eval,count_IR] = dms_filter_IR(Pareto_fron
 %
 %    min  F(x) = (f_1(x),f_2(x),...,f_m(x))  
 %    s.t. c_j(x) <= 0, j = 1,...,p,
-%          x in X
+%         x in X
 %
-% where x is a real vector of dimension n, A a rational matrix and b is a
-% real vector of dimension n.The derivatives of the functionsf_i,
-% i = 1,..., m, are not used. Only function values are provided for F 
+% where x is a real vector of dimension n.The derivatives of the functions
+% f_i, i = 1,..., m, are not used. Only function values are provided for F 
 % and C = (c_1,c_2,...,c_p). In order to compute the set of directions
 % we use the linear constraints to conform to the geometry of nearby 
 % constraints.
@@ -223,10 +222,10 @@ Llist     = [];
 alfa      = [];
 INk       = [];
 Pfeasible = 0;
-if dir_dense  == 5
-    Phalton = haltonset(n);
-    p=primes(7919);        % 1000 primes numbers
-    ihalton_ini = p(n);    % Initial halton index.
+if dir_dense == 4
+    Phalton     = haltonset(n);
+    p           = primes(7919); % 1000 primes numbers
+    ihalton_ini = p(n);         % Initial halton index.
 end
 func_eval = 0;
 match     = 0;
@@ -264,12 +263,12 @@ if cache
     end
 end
 %
-% Define the maximum value to constraint violation function.
+% Define the maximum constraint violation value allowed - hmax.
 %
 if hmax_par ~= 0
     hmax = hmax_par;
 else
-    H_xini = [];
+    h_xini = [];
     for i=1:size(Pini,2)
         x_ini = Pini(:,i);
         feasible_lin = 1;
@@ -287,20 +286,20 @@ else
             end
         end
         if feasible_lin
-            h_aux  =feval(func_C,x_ini);
+            h_aux  = feval(func_C,x_ini);
             hx     = max(0,h_aux);
             h      = norm(hx,2).^2;
-            H_xini = [h,H_xini]; 
+            h_xini = [h, h_xini]; 
         end
     end
-     hmax_aux1 = setdiff(H_xini,Inf);
+     hmax_aux1 = setdiff(h_xini,Inf);
      hmax_aux2 = max(10,0.5*length(h_aux));
      [~,ind_maxj]  = max(hmax_aux1);
      hmax_aux1 = hmax_aux1(ind_maxj);
      if ~isempty(hmax_aux1)
          hmax = max(hmax_aux1,hmax_aux2);
      else
-         hmax = Inf;
+         hmax = hmax_aux2;
      end
 end
 %
@@ -406,7 +405,7 @@ end
 %
 % Set seed for random generation of poll directions.
 %
-if (dir_dense ~= 0)
+if (dir_dense == 1 || dir_dense == 2)
    rand('state',1234);
 end
 %
@@ -430,9 +429,6 @@ if output
     fprintf(fresult,print_format, iter, '--',size(Plist,2), length(index), min(alfa), max(alfa));
 end
 %
-count_IR = 0;
-con_F = 0;
-IR_success = [];
 while (~halt)
    func_iter = 0;
    move      = 0;
@@ -456,15 +452,16 @@ while (~halt)
 %
          if (sort_filter_par ~= 0)               
              if iter == 0 || Restoration_success
-                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F);                 
+                 if iter == 0
+                     [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F);
+                 else
+                     [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,f_current_poll);
+                 end
              else
-                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,count_poll_1,count_poll,f_current_poll);
+                 [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,f_current_poll,count_poll_1,count_poll);
              end
              f_current_poll = Flist(:,1);
              p_current_poll = Plist(:,1);
-             if iter==0
-                 centerOLD = f_current_poll;
-             end
          end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -473,9 +470,8 @@ while (~halt)
 %  
         if (f_current_poll(end) > tol_feasible && ~only_filter)
             [Plist,Flist,Llist,alfa,added,index_poll_center,func_eval,Restoration_success,Fy] = restoration_phase(Plist,Flist,Llist,alfa,func_F,func_C,lbound,ubound,CacheP,CachenormP,CacheF,cache,Pareto_front,func_eval,tol_match);            
-            if Restoration_success
-                IR_success = [IR_success Fy];
-                if Fy(end) <= tol_feasible && ~isempty(Fy)
+            if Restoration_success && ~isempty(Fy)
+                if Fy(end) <= tol_feasible 
                     center_F   = 1;                    
                 else
                     center_F   = 0;                    
@@ -498,8 +494,10 @@ while (~halt)
 %        Generate the positive basis.
 %
          if (dir_dense == 0)
+             % Coordinate directions.
              D = [eye(n) -eye(n)];
          elseif (dir_dense == 1)
+            % Dense set of directions (Implemented DMS original).
             v     = 2*rand(n,1)-1;
             [Q,R] = qr(v);
             if ( R(1) > 1 )
@@ -508,6 +506,8 @@ while (~halt)
                D = Q * [ -eye(n) eye(n) ];
             end
          elseif (dir_dense == 2)
+             % Dense set of directions as it done in MADS
+             % BOOK: Audet & Hare 2017.
              v = randn(n,1); v=v./norm(v);
              if alfa(1)<=alfa(1)^2
                  DELTA=alfa(1);
@@ -522,10 +522,11 @@ while (~halt)
              end
              D = [B',-B'];
          elseif (dir_dense == 3)
-             D = GSS_LST(func_C,Plist(:,1),0.1*alfa(1));
+             % Directions conforming the boundary relative to 
+             % the epsilon-active constraints.
+             [D,INk] = GSS_ABDP(func_C,Plist(:,1),0.1*alfa(1),INk);
          elseif (dir_dense == 4)
-             [D,INk] = GSS_ABDP(func_C,Plist(:,1),0.1*alfa(1),INk,iter);
-         elseif (dir_dense == 5)
+             % Dense generation using halton sequences.
              ihalton = ihalton_ini+Llist(1);
              q_aux = 2.0*Phalton(ihalton+1,:)' - ones(n,1);
              zeta_f = norm(q_aux,2)/(2*norm(q_aux,Inf));
@@ -551,11 +552,8 @@ while (~halt)
          count_d            = 1;
          index_poll_center  = 1;
          added              = zeros(1,size(Plist,2));
-         count_poll_1 = 0;
-         count_poll_2 = 0;
-         count_poll   = 0;
-         improving    = 0;
-         dominating   = 0;
+         count_poll         = 0; % Count poll points evaluated
+         count_poll_1       = 0; % Count infeasible poll points         
          while (count_d <= nd)
              xtemp = Plist(:,1) + alfa(1) * D(:,count_d);
 %
@@ -617,15 +615,7 @@ while (~halt)
                    pdom = 1;
                else
                    [pdom,index_ndom] = paretodominance(Ftemp,Flist);
-                   %[pdom,index_ndom] = paretodominance_new(Ftemp,Flist,tol_feasible);
-                   %[pdom,index_ndom] = paretodominance_MAY(Ftemp,Flist,tol_feasible);
-                   %[pdom,index_ndom] = paretodominance_MAY_AE(Ftemp,Flist,tol_feasible);
                    if (pdom == 0)
-                       if f_current_poll(end)>tol_feasible && Ftemp(end)<f_current_poll(end) && index_ndom(1) ~= 0
-                           improving = 1;
-                       elseif index_ndom(1) == 0
-                           dominating = 1;
-                       end
                        code_add = 1;
                        if (Pareto_front == 1)
                            success = 1;
@@ -644,16 +634,12 @@ while (~halt)
                        Llist = [Llist(index_ndom),Llist(1)];
                        added = [added(index_ndom),code_add];
                        if h<=tol_feasible
-                           count_poll_2 = count_poll_2 + 1;
+                           center_F = 1;
                        end
                    end
                end
             end
-            if oport_approach && dominating
-                count_d = nd + 1;
-            else
-                count_d = count_d + 1;
-            end
+            count_d = count_d + 1;
          end
          poll = 0;  
       end
@@ -700,46 +686,13 @@ while (~halt)
          end
       end
 %
-% Update hmax if the current poll center is an infeasible point
-%
-%         if f_current_poll(end)>tol_feasible && update_hmax_par
-%             ind_aux_inf = Flist(end,:)>tol_feasible;
-%             Flist_I     = Flist(end,ind_aux_inf);
-%             if ~isempty(Flist_I)
-%                 if improving
-%                     ind_aux_cacheF = (CacheF(end,:)<f_current_poll(end));
-%                     if sum(ind_aux_cacheF)~=0
-%                         hmax = max(CacheF(end,ind_aux_cacheF));
-%                     end
-%                 elseif ~isempty(Flist_I) && f_current_poll(end) == max(Flist_I)
-%                     hmax = f_current_poll(end);
-%                 else
-%                     indI = (CacheF(end,:)<max(Flist_I) & CacheF(end,:)>=f_current_poll(end));
-%                     if sum(indI)~=0
-%                         hmax = max(CacheF(end,indI));
-%                     end
-%                 end
-%                 ind_h          = Flist(end,:)>hmax;
-%                 Plist(:,ind_h) = [];
-%                 Flist(:,ind_h) = [];
-%                 Llist(ind_h)   = [];
-%                 alfa(ind_h)    = [];
-%                 added(ind_h)   = [];
-%             end
-%         end
-%
 %     Update the step size parameter.
 %     
       if success
          alfa(logical(added))  = alfa(logical(added))*gamma_par;
-         centerOLD = f_current_poll;
       else
          alfa(logical(added))  = alfa(logical(added))*beta_par;
          Llist(logical(added)) = Llist(logical(added))+1;
-         if f_current_poll(end) > tol_feasible && sum(centerOLD == f_current_poll)==length(centerOLD) && sum(sum(f_current_poll == IR_success)==length(centerOLD))
-             count_IR = count_IR + 1; 
-             centerOLD = f_current_poll;
-         end
       end     
    else
       nPlist = size(Plist,2);
@@ -835,7 +788,7 @@ list_size    = size(Plist,2);
 PointsF_F    = Flist(1:end-1,ind);
 PointsX_F    = Plist(:,ind);
 Pointsalfa_F = alfa(ind);
-% Just to be sure: Pareto dominance - Only remain with nondominated points
+% To be sure: Only remain with nondominated points
 if ~isempty(PointsF_F)
     Flist_F = PointsF_F(:,1);
     Plist_F = PointsX_F(:,1);
@@ -856,8 +809,6 @@ else
     Plist_F = [];
     alfa_F  = [];
 end
-
-
 %
 % Print final report in screen.
 %

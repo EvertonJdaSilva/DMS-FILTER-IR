@@ -108,25 +108,24 @@ spread_option = 1; % 0-2 variable: 1 if for each point in the current approximat
 %
 % Directions and step size.
 %
-dir_dense  = 0;    % 0-5 variable: 1 if a dense set of directions should be 
-                   % considered for polling, 2 a dense set of direction as 
-                   % it done in MADS; 3 or 4 if directions conforming the 
-                   % boundary relative to the epsilon-active constraints,
-                   % 3: GSS_LST and 4: GSS_ABDP, 5: dense generation 
-                   % using halton sequences; 0 otherwise.
+dir_dense  = 0;    % 0-5 variable: Directions considered for polling
+                   % 0: Coordinate directions;
+                   % 1: Dense set of directions (Implemented DMS original); 
+                   % 2: Dense set of directions as it done in MADS; 
+                   % 3: Directions conforming the boundary relative to 
+                   %    the epsilon-active constraints (GSS_ABDP);
+                   % 4: Dense generation using halton sequences.
 %
 alfa_ini  = 1;     % Initial step size. 
 %
-Llist_ini = 0;     % Initial mesh index.
+Llist_ini = 0;     % Initial mesh index used for computing directions using 
+                   % dir_dense = 4.
 %
 beta_par  = 0.5;   % Coefficient for step size contraction.
 % 
 gamma_par = 1;     % Coefficient for step size expansion.
 %
 % Filter parameters
-%
-dms_filter_par = 1;   % 0-1 variable: 0 if barrier function is used to remain all
-                      % points feasible; 1 if filter method is used
 %
 par_ratio = 2;        % Parameter that multiplies the ratio for selection
                       % of an infesible poll center (1/beta_par)
@@ -143,8 +142,7 @@ sort_filter_par = 1;  % 0-1 variable: 1 if order the list of ponts in some
                       % way to choose the poll center, 0 take the first
                       % point in the list.
 %
-oport_approach = 0;   % 0-1 variable: 1 if an oportunistic approach is considered;
-                      % 0 for complete polling
-%
-only_filter = 0;
+only_filter = 0;      % 0-1 variable: 1 if only a filter approach is considered;
+                      % 0 if a filter plus a inexact restauration is
+                      % performed.
 % End of parameters_dms.

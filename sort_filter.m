@@ -1,8 +1,14 @@
-function [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,count_poll_1,count_poll,f_current_poll)
+function [Plist,Flist,Llist,alfa] = sort_filter(Plist,Flist,Llist,alfa,stop_alfa,tol_stop,tol_feasible,par_ratio,center_F,f_current_poll,count_poll_1,count_poll)
 
 
 % Switch to the inadmissibility step when all polling points have h(x)>0
-if nargin<10, count_poll_1 = 0; count_poll=1; f_current_poll = []; end 
+if nargin<11
+    count_poll_1 = 0;
+    count_poll   = 1;
+    if nargin==9
+        f_current_poll = [];
+    end 
+end 
 
 %%% Indices corresponding to points that the step lenght is greater than tol_stop
 index1 = find(alfa>tol_stop);
@@ -39,24 +45,31 @@ if isempty(Ffeasible) && ~isempty(Finfeasible)
     alfa        = [alfainfeasible(ind_inf),alfa(index2)];
 % All the points are infeasible and we also have feasible points
 elseif ((count_poll_1 == count_poll || ~center_F) && ~isempty(Ffeasible) && ~isempty(Finfeasible))
-    if ~isempty(f_current_poll)
-        if f_current_poll(end)>tol_feasible        
-            ind     = find(sum(f_current_poll==Finfeasible,[])==length(f_current_poll));
+    ind     = find(sum(f_current_poll==Finfeasible,[])==length(f_current_poll));
+    if f_current_poll(end)>tol_feasible % In the last iteration, we had an infeasible poll center and a failed IR step.
+        if ~isempty(ind)    
+            % Therefore, we persist at the last admissible point until a
+            % successful IR occurs, admissibility is restored at the poll
+            % step, or the admissible point converges (isempty(ind)=1).
             ind_inf = setdiff(1:size(Finfeasible,2),ind);
             Plist   = [Pinfeasible(:,ind),Pfeasible,Pinfeasible(:,ind_inf),Plist(:,index2)];
             Flist   = [Finfeasible(:,ind),Ffeasible,Finfeasible(:,ind_inf),Flist(:,index2)];
             Llist   = [Linfeasible(ind),Lfeasible,Linfeasible(ind_inf),Llist(index2)];
             alfa    = [alfainfeasible(ind),alfafeasible,alfainfeasible(ind_inf),alfa(index2)];            
-            goon    = 0;
         else
-            goon    = 1;
+            [Psort,Fsort,Lsort,alfasort] = most_isolated(Pfeasible,Ffeasible,Lfeasible,alfafeasible,stop_alfa,tol_stop);
+            Plist = [Psort,Pinfeasible,Plist(:,index2)];
+            Flist = [Fsort,Finfeasible,Flist(:,index2)];
+            Llist = [Lsort,Linfeasible,Llist(index2)];
+            alfa  = [alfasort,alfainfeasible,alfa(index2)];
         end
+        goon    = 0;
     else
         goon = 1;
     end
     if goon
         % Compute the distance among the infeasible point and the last poll center
-        % the last point in the list corresponds to the previous poll center
+        % the last point in the list corresponds to the previous feasible poll center
         y = Pfeasible(:,end)-Pinfeasible(:,1:end);
         indaux    = 1;
         distancia = zeros(size(y,2),1);

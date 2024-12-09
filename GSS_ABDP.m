@@ -1,5 +1,6 @@
-function [D,INk] = GSS_ABDP(func_C,x,epsilon,INk,iter,minimal_basis_par)
-%% Algorithm for constructing the set of generators Dk.
+function [D,INk] = GSS_ABDP(func_C,x,epsilon,INk)
+%
+% Algorithm for constructing the set of generators Dk.
 % As described by Mark A. Abramson, Olga A. Brezhneva, Jhon E. Dennis Jr.
 % and Rachael L. Pingeld in "Pattern search in the presence of degenerate
 % linear constraints", Optimization Methods & Software, Vol. 23, No. 3,
@@ -10,51 +11,34 @@ function [D,INk] = GSS_ABDP(func_C,x,epsilon,INk,iter,minimal_basis_par)
 % Implemented by Everton J. Silva
 %
 % Version September 2022.
-%%
+%
 % Let the current iterate xk and a parameter epsilon > 0 be given.
 % Inputs: func_C  - constraints functions
 %         x       - the current point
-%         INk     - index set corresponding to nonredundant constraints
 %         epsilon - parameter bigger than zero
-%         iter    - iteration
+%         INk     - index set corresponding to nonredundant constraints
 % Outputs:
 %          INk - index set corresponding to nonredundant constraints
 %          D   - set of polling directions
-%% User choice
-tol = 1e-6;
-selection = 1;     % Enumeration schemes: 1 for sequential selection and
-%                                         2 for random selection
-decomp = 2; % Decomposition used to construct directions:
-%                                             1 for LU decomposition and
-%                                             2 for QR decomposition
-%% Initialization
-if nargin<5, iter=0; selection = 2; end
+% User choice
+tol       = 1e-6;
+% Initialization
 IN = []; Ieps = []; Bk = []; BN = [];
-inner_iter = 0;
-
-if (inner_iter == 0)
-    [~,A,b] = feval(func_C,x);
-    A = A'; b = b';
-    % Defining the new matrix A bar and b bar
-    for i = 1:size(A,2)
-        A_bar(:,i) = A(:,i)/norm(A(:,i),2);
-        b_bar(i) = b(i)/norm(A(:,i),2);
-    end
-% else
-%     A = A(I,:); b = b(I);
-%     A_bar = A(I,:); b_bar = b(I);
+[~,A,b] = feval(func_C,x);
+A = A'; b = b';
+% Defining the new matrix A bar and b bar
+for i = 1:size(A,2)
+    A_bar(:,i) = A(:,i)/norm(A(:,i),2);
+    b_bar(i) = b(i)/norm(A(:,i),2);
 end
-    
-
-
-%% Part I: Constructing the set IN(xk,epsilon)
+% Part I: Constructing the set IN(xk,epsilon)
 % Constructing the working index set I(xk,epsilon)
 m = size(A,2); % A(line,column)
 I = (1:m)';
-for i = 1:length(I)
-    if abs(b_bar(i)-A_bar(:,i)'*x)<=epsilon
-        Ieps = [Ieps;i]; %#ok<*AGROW> 
-        Bk = [Bk,A(:,i)];
+for i = 1:m
+    if abs(b_bar(i)-A_bar(:,i)'*x)<= epsilon
+        Ieps = [Ieps;i];
+        Bk   = [Bk,A(:,i)];
     end
 end
 
@@ -92,8 +76,6 @@ else
             xstar = fmincon(@(x)(-A(:,j)'*x),zeros(n,1),A(:,Jaux1)',b(Jaux1)');
             if (A(:,j)'*xstar-b(j)<=tol) % the jth constraint is redundant
                 % remove aj'*x<=bj from the Omega
-                %A(:,j) = [];
-                %b(j) = [];
                 %take j out of the sets I and I(x,epsilon);
                 I = setdiff(I,j);
                 Ieps = setdiff(Ieps,j);
@@ -106,49 +88,53 @@ else
     end
 end
 
-%% Part II: Constructing the set of generators Dk
+% Part II: Constructing the set of generators Dk
 r = rank(BN);
 if r ~= length(IN) % Degenerate case
     mN = size(BN,2);
-    C = nchoosek(1:mN,r);
-    sk = size(C,1); % sk = factorial(mN)/(factorial(r)*factorial(mN-r));
-    switch selection
-        case 1
-            % Sequential selection
-            j = 1+mod(iter,sk);
-            BN = BN(:,C(j,:));
-        case 2
-            % Random selection
-            j = randi(sk);
-            BN = BN(:,C(j,:));
+    bN = b(IN);
+    c_val = BN'*x- bN';
+    [~,sorted_idx] = sort(c_val);
+    BN_new = [];
+    for j=1:length(sorted_idx)
+        idx = sorted_idx(j);
+        if isempty(BN_new)
+            BN_new = BN(:,idx);
+            BN_rank_new = 1;
+        else
+            BN_new_temp = [BN_new BN(:,idx)];
+            BN_rank_temp = rank(BN_new_temp);
+            if BN_rank_temp > BN_rank_new
+                BN_new = BN_new_temp;
+                BN_rank_new = BN_rank_temp;
+            end
+        end
     end
+    BN = BN_new;
 end
 
 if isempty(BN)  % If we do not have any active constraint we consider the
     % coordinate directions
-    if minimal_basis_par
-        D = [eye(length(x)) -eye(length(x))];
-    else
-        D = [eye(length(x)) -sum(eye(length(x)),2)];
-    end
+    D = [eye(length(x)) -eye(length(x))];
 else
-    switch decomp
-        case 1
-            % LU decomposition
-            [D] = Set_LU(BN);
-        case 2
-            % QR decompposition
-            [D] = Set_QR(BN);
-    end
-    Daux=zeros(size(D,1),size(D,1));
-    for i=1:size(D,1)
+    % QR decomposition constructs a set of generators by using the
+    % QR decomposition.
+    [~,R] = qr(BN);
+    r = rank(BN);
+    % B = Q*R = [Q1 Q2]*[R1 R2; 0 0]
+    % Q1 form an orthonormal basis for the space spanned by the columns of B
+    Q1 = orth(BN);
+    % Q2 form an orthonormal basis for nullspace of B'
+    Q2 = null(BN');
+    % R1 is upper triangular and rank(R1)=rank(B)
+    R1 = R(1:r,1:r);
+    D1 = (Q1*R1)/(R1'*R1);
+    D2 = Q2;
+    D  = [D1,D2,-D1,-D2];
+    Daux=zeros(size(D));
+    for i=1:size(D,2)
         Daux(:,i)=D(:,i)/norm(D(:,i));
     end
-    if minimal_basis_par
-        D = [Daux -Daux];
-    else
-        D = [Daux -sum(Daux,2)];
-    end
+    D = Daux;
 end
-inner_iter = inner_iter+1; %#ok<*NASGU> 
 end

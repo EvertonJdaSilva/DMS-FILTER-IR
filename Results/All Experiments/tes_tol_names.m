@@ -1,7 +1,0 @@
-DFMO_centroid_500funcevals_10_4
-DMultiMadsPB_500funceval_10_4
-teste_november_v4_5000_10_4
-
-DFMO_centroid_500funcevals_10_6
-DMultiMadsPB_500funceval_10_6
-teste_november_v4_5000_10_6
