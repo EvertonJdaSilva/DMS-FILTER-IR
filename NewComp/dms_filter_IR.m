@@ -206,9 +206,9 @@ else
                     .*repmat((ubound_gen-lbound_gen),1,nPini);
                 if ~mod(nPini,2) && ~user_list_size
                     Pini = [Pini (lbound_gen + ubound_gen)/2];
-                    if ~isempty(x_ini)
-                        Pini = [Pini x_ini];
-                    end
+                    %if ~isempty(x_ini)
+                    %    Pini = [Pini x_ini];
+                    %end
                 end
              end
          end
