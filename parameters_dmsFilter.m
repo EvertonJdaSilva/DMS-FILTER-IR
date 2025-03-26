@@ -128,7 +128,7 @@ gamma_par = 1;     % Coefficient for step size expansion.
 % Filter parameters
 %
 par_ratio = 2;        % Parameter that multiplies the ratio for selection
-                      % of an infesible poll center (1/beta_par)
+                      % of an infeasible poll center (1/beta_par)
 %
 tol_feasible = 10^-5; % Minimun value of constraint violation function to
                       % accept a point as feasible point.
