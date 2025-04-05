@@ -44,9 +44,9 @@ if isempty(Ffeasible) && ~isempty(Finfeasible)
     Llist       = [Linfeasible(ind_inf),Llist(index2)];
     alfa        = [alfainfeasible(ind_inf),alfa(index2)];
 % All the points are infeasible and we also have feasible points
-elseif ((count_poll_1 == count_poll || ~center_F) && ~isempty(Ffeasible) && ~isempty(Finfeasible))
-    ind     = find(sum(f_current_poll==Finfeasible,[])==length(f_current_poll));
+elseif ((count_poll_1 == count_poll || ~center_F) && ~isempty(Ffeasible) && ~isempty(Finfeasible))    
     if f_current_poll(end)>tol_feasible % In the last iteration, we had an infeasible poll center and a failed IR step.
+        ind = find(sum(f_current_poll==Finfeasible,[])==length(f_current_poll));
         if ~isempty(ind)    
             % Therefore, we persist at the last admissible point until a
             % successful IR occurs, admissibility is restored at the poll
